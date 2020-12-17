@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - node
+install:
+  - npm install -g mocha
+  - npm install chai
+  - npm install chai-http
+  - npm install express
