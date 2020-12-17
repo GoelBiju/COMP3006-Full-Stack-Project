@@ -15,7 +15,7 @@ suite("Integration Tests for game", function () {
       .get("/game")
       .end(function (error, response) {
         chai.assert.equal(response.status, 200, "Wrong status code");
-        chai.assert.equal(response.text, "Connect Five", "Wrong response text");
+        chai.assert.equal(response.text, "Connect Four", "Wrong response text");
       });
   });
 });
