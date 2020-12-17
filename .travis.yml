@@ -6,3 +6,9 @@ install:
   - npm install chai
   - npm install chai-http
   - npm install express
+deploy:
+  provider: heroku
+  app: comp3006-connect-four
+  on: main
+  api_key:
+    secure: WAZdOty36vL9u2DA9STFS0icvveQ/k8ZYFyoFJ8k5bvRI8b3I6JogJkMJct+jjBSNMAFO52XqCDwQ2GRO5oIqzlHqmGnHwG/NV1NG7H8sLYDqNAZ6fEFvq4AXZlD1EBpLhy6Yw7otIhDX7xljB3RpGmziudEZwItvSf0YeP0NYpBRFK5N9zRlEoHiELoPhudFsHFcmcDY6Q53VKoAeE/Svud1NRE7qPCtFoodgQdLP3QQxko+eHbcU9YpS6v/GFL1Jy61HUzA2qkHI/MvFwLHr99dJ0HQ+9gA3cRxRcPm6UqurquTRB0TCO62QWL+goEuQEtYNx848bgTIWmPLljeO8C3FZ6V36dlkpYgrljtYcy3EweN2uGc+xCHKnMYVtXCP6YLoY9kRtsDrxqxWaJYdjfNBBB1Z91mGPi/wCECYgsfcVBQRcdGwHTEjz4npEIEZHYt4rAosw65p+DYjlw1G6DhSFJIU3LhqmBimZLkBP9vhdcVByT7/hrzUpuEAYSbBsktym9Hhhh90cPBSzWJtTBxI6AKw3Ll0shkuzG2EpRWGTs1WRiQkeYn5m4JRbso2QqVQI3tkB5aD3PQP//z5PRQhVdXcb0OUa9oOQFsPumwoWZmTYYQ+8UCFZczLFa8LhHbgKT4U44HnfYrTSeAqFajDjh1nltZfaJ/hI492M=
