@@ -14,5 +14,5 @@ deploy:
   app: comp3006-connect-four
   on:
     repo: GoelBiju/COMP3006-Full-Stack-Project
-    branch: bugfix/heroku-key
+    branch: main
   skip_cleanup: "true"
