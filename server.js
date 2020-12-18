@@ -1,7 +1,13 @@
 let express = require("express");
-let routes = require("./routes");
+let path = require("path");
 
+let routes = require("./src/routes");
+
+// Initialise the app
 let app = express();
+
+// Configure to use statics
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", routes.gameRoute);
 
