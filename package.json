@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha -ui tdd test/",
+    "test": "nyc --reporter=html --reporter=text mocha -ui tdd test/",
     "start": "node run.js"
   },
   "repository": {
@@ -22,5 +22,11 @@
   "homepage": "https://github.com/GoelBiju/COMP3006-Full-Stack-Project#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0"
   }
 }
