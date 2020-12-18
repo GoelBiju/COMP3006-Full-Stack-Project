@@ -1,0 +1,34 @@
+{
+  "name": "connect-four",
+  "version": "1.0.0",
+  "description": "COMP3006 Full Stack Project based on a multiplayer Connect 4 game.",
+  "main": "run.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node run.js",
+    "test": "nyc --reporter=html --reporter=text mocha -ui tdd test/",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GoelBiju/COMP3006-Full-Stack-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GoelBiju/COMP3006-Full-Stack-Project/issues"
+  },
+  "homepage": "https://github.com/GoelBiju/COMP3006-Full-Stack-Project#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "coveralls": "^3.1.0",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0"
+  }
+}
