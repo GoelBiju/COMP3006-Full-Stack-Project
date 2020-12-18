@@ -15,4 +15,4 @@ deploy:
   on:
     repo: GoelBiju/COMP3006-Full-Stack-Project
     branch: main
-  skip_cleanup: "true"
+  cleanup: "true"
