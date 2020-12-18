@@ -6,6 +6,7 @@ install:
   - npm install chai
   - npm install chai-http
   - npm install express
+after_success: npm run coverage
 deploy:
   provider: heroku
   app: comp3006-connect-four

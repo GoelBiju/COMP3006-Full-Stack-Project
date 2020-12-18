@@ -7,8 +7,9 @@
     "test": "test"
   },
   "scripts": {
+    "start": "node run.js",
     "test": "nyc --reporter=html --reporter=text mocha -ui tdd test/",
-    "start": "node run.js"
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "coveralls": "^3.1.0",
     "mocha": "^8.2.1",
     "nyc": "^15.1.0"
   }
