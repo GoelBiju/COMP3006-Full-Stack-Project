@@ -3,6 +3,6 @@ let routes = require("./routes");
 
 let app = express();
 
-app.get("/game", routes.gameRoute);
+app.get("/", routes.gameRoute);
 
 module.exports.app = app;
