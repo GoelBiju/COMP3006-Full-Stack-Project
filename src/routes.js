@@ -1,5 +1,7 @@
+let path = require("path");
+
 function gameRoute(request, response) {
-  response.send("Connect Four");
+  response.sendFile(path.join(__dirname, "views/index.html"));
 }
 
 module.exports.gameRoute = gameRoute;

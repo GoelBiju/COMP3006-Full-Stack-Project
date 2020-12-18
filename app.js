@@ -1,4 +1,4 @@
-let server = require("./src/server");
+let server = require("./server");
 let PORT = process.env.PORT || 9000;
 
 let app = server.app;
