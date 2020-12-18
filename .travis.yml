@@ -1,16 +1,18 @@
 language: node_js
 node_js:
-  - node
+- node
 install:
-  - npm install -g mocha
-  - npm install chai
-  - npm install chai-http
-  - npm install express
+- npm install -g mocha
+- npm install chai
+- npm install chai-http
+- npm install express
 after_success: npm run coverage
 deploy:
   provider: heroku
-  app: comp3006-connect-four
-  on:
-    all_branches: true
   api_key:
-    secure: Xqh3ZCuXILxvPHjS3ATPLC0T8Tm7gabBmwxav7K3rZRozTM+3yT722gIMWtAMLUdhFSzPmpCCHKuQYRTSDE+y9JALhFmYP/SI+/k1GcLnsQB/Z1qzQLgHQ0nPtUAkWbES8vDoaVxgY9DX7y6iGtr7mvFdk7Zr7vjIa+YGe/g8t7Ou1yjSIWOVCwqboZSTHn5RvcX4JVV4O9gnqUcJw7o2qWtOUp6TApa515/By1I5KcxJ1eWgRkE5+tDAqu735KiTfFx5HU1OTWrKlwdhAlTF318X132LfdcTwE02piP06N47GBB+Y8w5vZftG1EkP5xgSoL5Ls436MvWwVXwt7dozgneTtosBJ05oQnXsJvBWEW3BM+yZNPk3aLEzbfGnU9GLlpq6fBwoyPpGbzYdCOQo856esD8DCXSualCfn/wwMLbpd6DqqzVW1nY7qS8HceKxFKWku4Zq5rjexcCeIUcuKCwxDwcgnCCV0SwJDW0CQKXLnhLIT3DetdLND3hiGTQ9yjmErrZQ4AQ07HTCtqmDQyBUpKV2L2AL6HtQMBtYOQg2CRGQJnhjy5MlM6JVVghVk5iOnf1wXASJONFXLxP4m/Xxz7WDsDZWmpflFevQm4hHmlomTJOXfVSd2ROfztRetVdn5ADkfdvFtmrQr+0UerA9fUExXoDcj2dUTYOeg=
+    secure: cj3mJ4VvVQO5LSnDND9yZFbkLrPy8FoD25OEzXQx4eWv3kS1LNCfyfdgDJxWG9uxx9w1ojviAOI52DhBAyRzHSc6H0bB952CK+4boHfUeCGcBzt8+s4w8CxSXbJhSPUqCdOQCGPcTa8jQ4iClYBjcjQaRGz2r0+PE2TK9+eL4qMpHGnYWW1xtaUG6wr3EPDCzakYapgJ+nKiQ2Sy2p92pEEHMN46XYP0mBPW4dCP7K1mBXlD2+8Jwl/QgRk/c7X4Y1DZeQCfxBvy+l0DgZb818mQZaf936H8NuiFWsClaUFrDxa/sIgdy33Ee1U0XYK4jwrQ4DoqvZudKd6m2lhwjDUI84sKeZP2nUMLva5aYCKpUzPoHWXjww7fE1LyNBmbQyVVfiZmZhf+E8HlqH1kbbUGu9LXNK2UD/MseObp81XOcD8fz10Nw334OVLuqXMApXYelT91P2mc77ovNabnZOx9bAmnWizbstGQAKh3zrJs/xxw6h8Weffs3UtunVXSLL3qT4C2OCZu4/cLJ0H0uBNDsHFNx9uSSpeRpzVdzwzjYDVKwG8YF0ZFZtLIX2YNXvHQOGm6Yx3xxFWKCjnQ71G6vc6RMkwAOK1PpuECP+Hb6edl9b1m/E45lI0SkF7nI4h3kg3zvKIl4oDLd1ERbJ2jfTLvr/ioSwUuRef1EZE=
+  app: COMP3006-Full-Stack-Project
+  on:
+    repo: GoelBiju/COMP3006-Full-Stack-Project
+    branch: bugfix/heroku-key
+  skip_cleanup: 'true'
