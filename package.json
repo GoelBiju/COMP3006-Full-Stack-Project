@@ -2,12 +2,12 @@
   "name": "connect-four",
   "version": "1.0.0",
   "description": "COMP3006 Full Stack Project based on a multiplayer Connect 4 game.",
-  "main": "run.js",
+  "main": "app.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "start": "node run.js",
+    "start": "node app.js",
     "test": "nyc --reporter=html --reporter=text mocha -ui tdd test/",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
