@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/GoelBiju/COMP3006-Full-Stack-Project#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "socket.io": "^3.0.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",
