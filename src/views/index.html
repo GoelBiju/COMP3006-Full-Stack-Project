@@ -12,7 +12,12 @@
 
     <!-- socket.io -->
     <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
+
+    <!-- Client communication -->
     <script src="/client.js"></script>
+
+    <!-- Game related actions -->
+    <script src="/game.js"></script>
 
     <title>Connect Four</title>
   </head>
@@ -28,7 +33,7 @@
       <p id="game-status">No game</p>
     </div>
 
-    <h3 class="player-turn"></h3>
+    <h3 id="player-turn"></h3>
 
     <div id="game">
       <table>
