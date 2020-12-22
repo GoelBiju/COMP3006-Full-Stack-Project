@@ -14,7 +14,7 @@ h1 {
 
 #game {
   position: absolute;
-  top: 6rem;
+  top: 10rem;
   left: 50%;
   transform: translate(-50%);
   width: 650px;

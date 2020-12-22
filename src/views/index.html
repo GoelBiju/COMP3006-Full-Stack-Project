@@ -11,13 +11,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!-- socket.io -->
-    <script src="https://cdn.socket.io/socket.io-3.0.1.min.js"></script>
-
-    <!-- Client communication -->
-    <script src="/client.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 
     <!-- Game related actions -->
-    <script src="/game.js"></script>
+    <script src="/client.js"></script>
 
     <title>Connect Four</title>
   </head>
@@ -27,10 +24,11 @@
     <div id="connection-details">
       <label>Username:</label>
       <input id="player-name" />
-      <button id="connect">Join</button>
+      <button id="join">Join</button>
 
-      <p id="conn-status">Not connected</p>
+      <p id="conn-status">No connection</p>
       <p id="game-status">No game</p>
+      <p id="opponent-name">No opponent</p>
     </div>
 
     <h3 id="player-turn"></h3>
@@ -96,6 +94,6 @@
       </table>
     </div>
 
-    <div id="reset">Reset</div>
+    <!-- <div id="reset">Reset</div> -->
   </body>
 </html>
