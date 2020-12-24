@@ -3,7 +3,45 @@ $(function () {
   var socket = io();
   let gameJoined = false;
   let getUsername = () => $("#player-name").val();
-  let opponent = "";
+
+  // Game related actions
+
+  // Get table rows
+  let tableRows = $("tr");
+
+  // Get cells and slots
+  let tableCells = $("td");
+  // let tableSlots = $(".slot");
+
+  // List of players
+  let gamePlayers = [];
+
+  let currentPlayer = -1;
+
+  // Get next move
+  let getPlayerTurn = () => {
+    console.log("Current player: ", currentPlayer);
+    console.log("Game players: ", gamePlayers);
+    return gamePlayers[currentPlayer];
+  };
+
+  // Check if it my turn
+  let myTurn = () => {
+    if (gamePlayers.length == 2 && currentPlayer != -1) {
+      if (getPlayerTurn() == getUsername()) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
+  playerOneColor = "red";
+  playerTwoColor = "yellow";
+
+  // const reset = $("#reset");
 
   $("#join").click(function () {
     // Send some user info
@@ -17,24 +55,34 @@ $(function () {
     $("#conn-status").html("Connection: " + msg);
   });
 
+  // receiving game info
+  socket.on("game", function (gameInfo) {
+    console.log("Game info: ", gameInfo);
+
+    if (gameInfo.status == "start") {
+      // Set up the players
+      currentPlayer = gameInfo.nextMove;
+      gamePlayers = gameInfo.gamePlayers;
+
+      // Set game status
+      $("#game-status").text("Game: Play");
+
+      // Set opponent and player turn
+      $("#opponent-name").text(`Your opponent: ${gameInfo.opponent}`);
+      $("#player-turn").text(`Player Turn: ${getPlayerTurn()}`);
+
+      // Set game joined to allow moves
+      gameJoined = true;
+    } else if (gameInfo.status == "wait") {
+      $("#game-status").text("Waiting for another player");
+    }
+  });
+
   // When receiving reject message
   socket.on("reject", function (msg) {
     console.log("Rejected game: ", msg);
-    $("#game-status").html(msg);
+    $("#game-status").text(msg);
   });
-
-  // Game related actions
-
-  // Get table rows
-  let tableRows = $("tr");
-
-  // Get cells and slots
-  let tableCells = $("td");
-  let tableSlots = $(".slot");
-
-  // Player turn
-  const playerTurn = $("#player-turn");
-  // const reset = $("#reset");
 
   // Add event listener to each table cell to
   // find row and column location of cell
@@ -44,26 +92,6 @@ $(function () {
       `${e.target.parentElement.rowIndex}, ${e.target.cellIndex}`
     );
   });
-
-  // Handle players
-  let playerOne = "";
-  let playerTwo = "";
-
-  playerOneColor = "red";
-  playerTwoColor = "yellow";
-
-  // while (!playerOne) {
-  //   playerOne = prompt("Player One: Enter your name (Red)");
-  // }
-
-  // while (!playerTwo) {
-  //   playerTwo = prompt("Player Two: Enter your name (Yellow)");
-  // }
-
-  // TODO: Set current player and turn after receiving
-  //       game info at start of game
-  let currentPlayer = -1;
-  // playerTurn.text(`${playerOne}'s turn`);
 
   function changeColor(e) {
     let column = e.target.cellIndex;
@@ -100,7 +128,7 @@ $(function () {
 
   // Change the colour of each cell
   tableCells.each(function () {
-    if (currentPlayer != -1) {
+    if (gameJoined && myTurn()) {
       $(this).click(handleMove);
       $(this).css("backgroundColor", "white");
     }

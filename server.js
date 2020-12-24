@@ -2,9 +2,17 @@ let express = require("express");
 let http = require("http");
 let path = require("path");
 let socketIo = require("socket.io");
+let mongoose = require("mongoose");
 
 let routes = require("./src/routes");
 let socketHandle = require("./src/socket");
+
+// Database connection
+let mongoUrl = "mongodb://localhost:27017/connect4";
+mongoose.connect(mongoUrl, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
 
 // Initialise the app
 let app = express();

@@ -2,9 +2,12 @@ const {
   addGamePlayer,
   getRandomPlayer,
   getGamePlayerCount,
-} = require("./game");
+  getGamePlayer,
+  getGamePlayers,
+} = require("./models/Game");
 
 // TODO: Implement rooms based on game
+let nextMove = -1;
 
 // Handle socket events.
 function handleConnection(socket) {
@@ -19,7 +22,7 @@ function handleConnection(socket) {
 }
 
 function handleJoin(socket, username) {
-  console.log("User joined: ", username);
+  console.log("User join request: ", username);
 
   // Add the user to the game.
   if (addGamePlayer(username)) {
@@ -28,12 +31,28 @@ function handleJoin(socket, username) {
     if (getGamePlayerCount() == 2) {
       console.log("Game now full");
       // Choose a random player to start
-      let startPlayer = getRandomPlayer();
+      nextMove = getRandomPlayer();
+
+      // Get all the players in this game.
+      let gamePlayers = getGamePlayers();
+
+      // Send to other player
+      socket.broadcast.emit("game", {
+        status: "start",
+        opponent: username,
+        gamePlayers,
+        nextMove,
+      });
+
+      // Send back to client
       socket.emit("game", {
         status: "start",
-        startPlayer,
+        // Find the other players username
+        opponent: gamePlayers.find((player) => player != username),
+        gamePlayers,
+        nextMove,
       });
-      console.log("Sent game start, start player: ", startPlayer);
+      console.log("Sent game start, start player: ", nextMove);
     } else {
       socket.emit("game", { status: "wait" });
       console.log("Waiting for another player");
