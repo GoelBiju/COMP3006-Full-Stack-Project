@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "nyc --reporter=html --reporter=text mocha -ui tdd test/",
+    "test": "nyc --reporter=html --reporter=text mocha -ui tdd test/ --recursive",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/GoelBiju/COMP3006-Full-Stack-Project#readme",
   "dependencies": {
     "express": "^4.17.1",
+    "mongoose": "^5.11.8",
     "socket.io": "^3.0.4"
   },
   "devDependencies": {
@@ -30,6 +31,7 @@
     "chai-http": "^4.3.0",
     "coveralls": "^3.1.0",
     "mocha": "^8.2.1",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "sinon": "^9.2.2"
   }
 }
