@@ -20,8 +20,6 @@ $(function () {
 
   // Get next move
   let getPlayerTurn = () => {
-    console.log("Current player: ", currentPlayer);
-    console.log("Game players: ", gamePlayers);
     return gamePlayers[currentPlayer];
   };
 
@@ -84,15 +82,6 @@ $(function () {
     $("#game-status").text(msg);
   });
 
-  // Add event listener to each table cell to
-  // find row and column location of cell
-  $("td").click(function (e) {
-    console.log(
-      "Row, Column of clicked: ",
-      `${e.target.parentElement.rowIndex}, ${e.target.cellIndex}`
-    );
-  });
-
   function changeColor(e) {
     let column = e.target.cellIndex;
     let row = [];
@@ -107,30 +96,43 @@ $(function () {
         // Assign correct colour depending on the player
         if (currentPlayer == 1) {
           row[0].style.backgroundColor = playerOneColor;
-          playerTurn.text(`${playerTwo}'s turn`);
+          // playerTurn.text(`${playerTwo}'s turn`);
+
           return (currentPlayer = 2);
         } else {
           row[0].style.backgroundColor = playerTwoColor;
-          playerTurn.text(`${playerOne}'s turn`);
+          // playerTurn.text(`${playerOne}'s turn`);
           return (currentPlayer = 1);
         }
       }
     }
   }
 
-  function handleMove(event) {
-    // Send a message to the server to move this piece.
-    socket.emit("move", { username, column: event.target.cellIndex });
+  // Add event listener to each table cell to
+  // find row and column location of cell
+  $("td").click(function (e) {
+    console.log(
+      "Row, Column of clicked: ",
+      `${e.target.parentElement.rowIndex}, ${e.target.cellIndex}`
+    );
+  });
 
-    // Change the colour of the cell.
-    changeColor(event);
+  function handleMove(event) {
+    if (gameJoined && myTurn()) {
+      // Send a message to the server to move this piece.
+      socket.emit("move", {
+        username: getUsername(),
+        column: event.target.cellIndex,
+      });
+
+      // Change the colour of the cell.
+      changeColor(event);
+    }
   }
 
-  // Change the colour of each cell
+  // Reset all the table cells and assign handler
   tableCells.each(function () {
-    if (gameJoined && myTurn()) {
-      $(this).click(handleMove);
-      $(this).css("backgroundColor", "white");
-    }
+    $(this).click(handleMove);
+    $(this).css("backgroundColor", "white");
   });
 });

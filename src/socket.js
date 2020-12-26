@@ -2,12 +2,10 @@ const {
   addGamePlayer,
   getRandomPlayer,
   getGamePlayerCount,
-  getGamePlayer,
   getGamePlayers,
-} = require("./models/Game");
+} = require("./controllers/Game");
 
 // TODO: Implement rooms based on game
-let nextMove = -1;
 
 // Handle socket events.
 function handleConnection(socket) {
@@ -21,20 +19,26 @@ function handleConnection(socket) {
   socket.on("move", (moveInfo) => handleMove(socket, moveInfo));
 }
 
-function handleJoin(socket, username) {
+async function handleJoin(socket, username) {
   console.log("User join request: ", username);
 
   // Add the user to the game.
-  if (addGamePlayer(username)) {
+  const res = await addGamePlayer(username);
+  console.log("Add result: ", res);
+  if (res) {
     console.log("Added game player: ", username);
 
-    if (getGamePlayerCount() == 2) {
+    const count = await getGamePlayerCount();
+    console.log("Game count: ", count);
+
+    if (count == 2) {
       console.log("Game now full");
       // Choose a random player to start
-      nextMove = getRandomPlayer();
+      nextMove = await getRandomPlayer();
 
       // Get all the players in this game.
-      let gamePlayers = getGamePlayers();
+      let gamePlayers = await getGamePlayers();
+      console.log("Game players: ", gamePlayers);
 
       // Send to other player
       socket.broadcast.emit("game", {
@@ -64,9 +68,9 @@ function handleJoin(socket, username) {
   }
 }
 
-function handleMove(socket, moveInfo) {
-  console.log("Move info: ", moveInfo);
-}
+// function handleMove(socket, moveInfo) {
+//   console.log("Move info: ", moveInfo);
+// }
 
 module.exports = {
   handleConnection,
