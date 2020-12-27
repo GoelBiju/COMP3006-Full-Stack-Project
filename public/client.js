@@ -1,10 +1,10 @@
 $(function () {
   // Create socket
   var socket = io();
+
+  // Game settings
   let gameJoined = false;
   let getUsername = () => $("#player-name").val();
-
-  // Game related actions
 
   // Get table rows
   let tableRows = $("tr");
@@ -13,20 +13,20 @@ $(function () {
   let tableCells = $("td");
   // let tableSlots = $(".slot");
 
-  // List of players
+  // Player information
   let gamePlayers = [];
-
+  let myId = -1;
   let currentPlayer = -1;
+  let playerOneColor = "red";
+  let playerTwoColor = "yellow";
 
   // Get next move
-  let getPlayerTurn = () => {
-    return gamePlayers[currentPlayer];
-  };
+  const getPlayerTurn = () => gamePlayers[currentPlayer];
 
   // Check if it my turn
-  let myTurn = () => {
-    if (gamePlayers.length == 2 && currentPlayer != -1) {
-      if (getPlayerTurn() == getUsername()) {
+  const myTurn = () => {
+    if (gamePlayers.length == 2 && currentPlayer != -1 && myId != -1) {
+      if (myId == currentPlayer) {
         return true;
       } else {
         return false;
@@ -36,12 +36,18 @@ $(function () {
     }
   };
 
-  playerOneColor = "red";
-  playerTwoColor = "yellow";
-
-  // const reset = $("#reset");
-
+  // Join a game
   $("#join").click(function () {
+    // Reset other fields
+    gameJoined = false;
+
+    // Set game status
+    $("#game-status").text("No game");
+
+    // Set opponent and player turn
+    $("#opponent-name").text("No opponent");
+    $("#player-turn").text("");
+
     // Send some user info
     socket.emit("join", getUsername());
     console.log("Sent join");
@@ -53,12 +59,13 @@ $(function () {
     $("#conn-status").html("Connection: " + msg);
   });
 
-  // receiving game info
+  // Receiving game information
   socket.on("game", function (gameInfo) {
     console.log("Game info: ", gameInfo);
 
     if (gameInfo.status == "start") {
       // Set up the players
+      myId = gameInfo.id;
       currentPlayer = gameInfo.nextMove;
       gamePlayers = gameInfo.gamePlayers;
 
@@ -73,6 +80,8 @@ $(function () {
       gameJoined = true;
     } else if (gameInfo.status == "wait") {
       $("#game-status").text("Waiting for another player");
+    } else {
+      $("#game-status").text(gameInfo.status);
     }
   });
 
@@ -82,31 +91,26 @@ $(function () {
     $("#game-status").text(msg);
   });
 
-  function changeColor(e) {
-    let column = e.target.cellIndex;
-    let row = [];
+  socket.on("move", function (moveInfo) {
+    console.log("Move response: ", moveInfo);
 
-    //
-    for (let i = 5; i > -1; i--) {
-      //
-      if (tableRows[i].children[column].style.backgroundColor == "white") {
-        //
-        row.push(tableRows[i].children[column]);
+    // Check if the move was made
+    if (moveInfo.confirm) {
+      console.log(
+        `Move confirmed: ${moveInfo.row} (row), ${moveInfo.column} (column) (colour: ${moveInfo.colour})`
+      );
 
-        // Assign correct colour depending on the player
-        if (currentPlayer == 1) {
-          row[0].style.backgroundColor = playerOneColor;
-          // playerTurn.text(`${playerTwo}'s turn`);
+      // Change the colour of the cell.
+      console.log("Got table row: ", tableRows[moveInfo.row][moveInfo.column]);
+      // tableRows[moveInfo.row][moveInfo.column].style.backgroundColor =
+      //   moveInfo.colour;
 
-          return (currentPlayer = 2);
-        } else {
-          row[0].style.backgroundColor = playerTwoColor;
-          // playerTurn.text(`${playerOne}'s turn`);
-          return (currentPlayer = 1);
-        }
-      }
+      // Update next move
+      currentPlayer = moveInfo.nextMove;
+    } else {
+      console.log("Unable to move: ", moveInfo.reason);
     }
-  }
+  });
 
   // Add event listener to each table cell to
   // find row and column location of cell
@@ -121,12 +125,9 @@ $(function () {
     if (gameJoined && myTurn()) {
       // Send a message to the server to move this piece.
       socket.emit("move", {
-        username: getUsername(),
+        id: myId,
         column: event.target.cellIndex,
       });
-
-      // Change the colour of the cell.
-      changeColor(event);
     }
   }
 

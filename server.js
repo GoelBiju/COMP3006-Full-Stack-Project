@@ -24,7 +24,18 @@ mongoose
     // Create a single game.
     Game.findById("5fe570db883ea74b84e9fe3b", function (err, game) {
       game.players = [];
+      game.board = [
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+      ];
+      game.nextMove = -1;
+
       game.save();
+      console.log("Reset test values.");
     });
   });
 
