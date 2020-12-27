@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 // Create Game schema
 const GameSchema = mongoose.Schema({
+  _id: { type: Number, required: true },
   board: {
     type: [[Number]],
     default: [

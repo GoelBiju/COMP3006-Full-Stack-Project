@@ -9,8 +9,9 @@ let socketHandle = require("./src/socket");
 
 const Game = require("./src/models/Game");
 
-// Database connection
-let mongoDBUrl = "mongodb://localhost:27017/connect4";
+// Database connection using Heroku or localhost
+let mongoDBUrl =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/connect4";
 
 mongoose
   .connect(mongoDBUrl, {
@@ -22,20 +23,28 @@ mongoose
     console.log("Connected to database.");
 
     // Create a single game.
-    Game.findById("5fe570db883ea74b84e9fe3b", function (err, game) {
-      game.players = [];
-      game.board = [
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-      ];
-      game.nextMove = -1;
+    Game.findById("1", async function (err, game) {
+      if (game) {
+        game.players = [];
+        game.board = [
+          [-1, -1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1, -1],
+          [-1, -1, -1, -1, -1, -1, -1],
+        ];
+        game.nextMove = -1;
 
-      game.save();
-      console.log("Reset test values.");
+        game.save();
+        console.log("Reset test values.");
+      } else {
+        console.log("No game with ID: 1");
+
+        const g = await Game.create({ _id: "1" });
+        await g.save();
+        console.log("New game with ID: ", g._id);
+      }
     });
   });
 
@@ -78,5 +87,7 @@ function stop() {
   });
 }
 
-module.exports.app = server;
-module.exports.stop = stop;
+module.exports = {
+  app: server,
+  stop: stop,
+};

@@ -9,7 +9,7 @@ const {
 const { makeMove } = require("./logic");
 
 // TODO: Implement rooms based on game
-const gameId = "5fe570db883ea74b84e9fe3b";
+const gameId = "1";
 
 // Handle socket events.
 function handleConnection(socket) {
