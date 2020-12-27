@@ -4,14 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
-    <script src="app.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- Game related actions -->
+    <script src="/client.js"></script>
+
     <title>Connect Four</title>
   </head>
   <body>
     <h1>Connect Four</h1>
 
-    <h3 class="player-turn"></h3>
+    <div id="connection-details">
+      <label>Username:</label>
+      <input id="player-name" />
+      <button id="join">Join</button>
+
+      <p id="conn-status">No connection</p>
+      <p id="game-status">No game</p>
+
+      <p id="opponent-name">No opponent</p>
+      <p id="player-turn"></p>
+    </div>
 
     <div id="game">
       <table>
@@ -74,6 +94,6 @@
       </table>
     </div>
 
-    <div id="reset">Reset</div>
+    <!-- <div id="reset">Reset</div> -->
   </body>
 </html>

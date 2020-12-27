@@ -8,9 +8,13 @@ h1 {
   text-align: center;
 }
 
+#connection-details {
+  text-align: center;
+}
+
 #game {
   position: absolute;
-  top: 4rem;
+  top: 10rem;
   left: 50%;
   transform: translate(-50%);
   width: 650px;
