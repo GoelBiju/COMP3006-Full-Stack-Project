@@ -5,7 +5,7 @@ const {
   getGamePlayers,
   switchMove,
   updateNextMove,
-} = require("./controllers/Game");
+} = require("./controllers/game");
 const { makeMove } = require("./logic");
 
 // TODO: Implement rooms based on game
