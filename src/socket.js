@@ -96,8 +96,7 @@ async function handleMove(socket, moveInfo) {
     // Update next player
     const nextMove = await switchMove(gameId, id);
     if (nextMove != -1) {
-      // Send back a confirmation to change client board
-      socket.emit("move", {
+      let moveInfo = {
         confirm: true,
         row,
         column,
@@ -105,7 +104,13 @@ async function handleMove(socket, moveInfo) {
         colour: id == 0 ? "red" : "yellow",
         // Return next move
         nextMove,
-      });
+      };
+
+      // Send move to other player
+      socket.broadcast.emit("move", moveInfo);
+
+      // Send back a confirmation to change client board
+      socket.emit("move", moveInfo);
     } else {
       socket.emit("move", {
         confirm: "false",

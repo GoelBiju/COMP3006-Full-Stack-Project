@@ -17,8 +17,6 @@ $(function () {
   let gamePlayers = [];
   let myId = -1;
   let currentPlayer = -1;
-  let playerOneColor = "red";
-  let playerTwoColor = "yellow";
 
   // Get next move
   const getPlayerTurn = () => gamePlayers[currentPlayer];
@@ -101,12 +99,18 @@ $(function () {
       );
 
       // Change the colour of the cell.
-      console.log("Got table row: ", tableRows[moveInfo.row][moveInfo.column]);
-      // tableRows[moveInfo.row][moveInfo.column].style.backgroundColor =
-      //   moveInfo.colour;
+      console.log(
+        "Got table row: ",
+        tableRows.eq(moveInfo.row).children().eq(moveInfo.column)
+      );
+      $(tableRows.eq(moveInfo.row).children().eq(moveInfo.column)).css(
+        "backgroundColor",
+        moveInfo.colour
+      );
 
       // Update next move
       currentPlayer = moveInfo.nextMove;
+      $("#player-turn").text(`Player Turn: ${getPlayerTurn()}`);
     } else {
       console.log("Unable to move: ", moveInfo.reason);
     }
