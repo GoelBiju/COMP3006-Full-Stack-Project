@@ -3,23 +3,8 @@ const Game = require("../models/Game");
 // Get a game based on ID
 const getGame = async (id) => {
   const game = await Game.findById(id).exec();
-  console.log("Found game: ", game);
   return game;
 };
-
-// // Get the board from a game
-// const getBoard = async (id) => {
-//   let board = null;
-
-//   await getGame(id).then((game) => {
-//     if (game) {
-//       board = game.board;
-//     }
-//   });
-
-//   console.log("Game board: ", board);
-//   return board;
-// };
 
 // Add a player to the game
 const addGamePlayer = async (gameId, username) => {
@@ -27,8 +12,6 @@ const addGamePlayer = async (gameId, username) => {
 
   // Get the game to update
   await getGame(gameId).then(async (game) => {
-    console.log("Game to add player: ", game);
-
     // Add the user to the game and save
     if (game && game.players.length < 2 && !game.players.includes(username)) {
       game.players.push(username);
@@ -38,7 +21,6 @@ const addGamePlayer = async (gameId, username) => {
     }
   });
 
-  console.log("Added: ", added);
   return added;
 };
 
@@ -52,7 +34,6 @@ const getGamePlayerCount = async (gameId) => {
     }
   });
 
-  console.log("Got game length: ", count);
   return count;
 };
 
@@ -95,33 +76,6 @@ const getGamePlayer = async (gameId, i) => {
   return player;
 };
 
-// Switch the next move on a game and return the next player
-const switchMove = async (gameId, currentPlayer) => {
-  let nextPlayer = -1;
-
-  // Get the game to update
-  await getGame(gameId).then(async (game) => {
-    console.log("Game to switch move: ", game);
-
-    // Switch the next move to the new player
-    if (game && nextMove != -1) {
-      if (currentPlayer == 0) {
-        game.nextMove = 1;
-      } else if (currentPlayer == 1) {
-        game.nextMove = 0;
-      }
-      console.log(
-        `Switched from player ${currentPlayer} to player ${game.nextMove}`
-      );
-      await game.save();
-
-      nextPlayer = game.nextMove;
-    }
-  });
-
-  return nextPlayer;
-};
-
 // Update the next move for a game
 const updateNextMove = async (gameId, move) => {
   let updated = false;
@@ -136,6 +90,28 @@ const updateNextMove = async (gameId, move) => {
   });
 
   return updated;
+};
+
+// Switch the next move on a game and return the next player
+const switchMove = async (gameId, currentPlayer) => {
+  let nextPlayer = -1;
+
+  // Get the game to update
+  await getGame(gameId).then(async (game) => {
+    // Switch the next move to the new player
+    if (game && game.nextMove != -1) {
+      if (currentPlayer == 0) {
+        game.nextMove = 1;
+      } else if (currentPlayer == 1) {
+        game.nextMove = 0;
+      }
+      await game.save();
+
+      nextPlayer = game.nextMove;
+    }
+  });
+
+  return nextPlayer;
 };
 
 module.exports = {
