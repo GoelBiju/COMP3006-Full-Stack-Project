@@ -27,6 +27,6 @@ suite("Integration Tests", function () {
   suiteTeardown((done) => {
     // Rather than calling server.stop,
     // disconnecting here works.
-    return mongoose.disconnect(done);
+    return mongoose.disconnect(() => done());
   });
 });
