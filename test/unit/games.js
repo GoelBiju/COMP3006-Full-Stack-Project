@@ -57,17 +57,17 @@ suite("Game - Controller/Model", () => {
     });
   });
 
-  // test("adds a game player", async () => {
-  //   let addedOne = await addGamePlayer("1", "player 1");
-  //   chai.expect(addedOne).to.eq(true);
+  test("adds a game player", async () => {
+    let addedOne = await addGamePlayer("1", "player 1");
+    chai.expect(addedOne).to.eq(true);
 
-  //   let addedTwo = await addGamePlayer("1", "player 2");
-  //   chai.expect(addedTwo).to.eq(true);
+    let addedTwo = await addGamePlayer("1", "player 2");
+    chai.expect(addedTwo).to.eq(true);
 
-  //   // Adding a third player which should not be accepted
-  //   let addedThree = await addGamePlayer("1", "player 3");
-  //   chai.expect(addedThree).to.eq(false);
-  // });
+    // Adding a third player which should not be accepted
+    let addedThree = await addGamePlayer("1", "player 3");
+    chai.expect(addedThree).to.eq(false);
+  });
 
   // test("gets a game player count", async () => {
   //   // Check initial count
