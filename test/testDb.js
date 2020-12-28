@@ -8,11 +8,19 @@ const connectTestDb = async () => {
   mongoServer = new MongoMemoryServer();
   const mongoUri = await mongoServer.getUri();
 
+  // Disconnect any active connections
+  await mongoose.disconnect();
+
   // connect to test database
-  await mongoose.connect(mongoUri, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  });
+  await mongoose
+    .connect(mongoUri, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    })
+    .then(() => {
+      // Disable any debugging information from showing.
+      mongoose.set("debug", false);
+    });
 };
 
 const disconnectTestDb = async () => {
