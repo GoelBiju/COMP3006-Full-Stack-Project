@@ -69,21 +69,21 @@ suite("Game - Controller/Model", () => {
     chai.expect(addedThree).to.eq(false);
   });
 
-  // test("gets a game player count", async () => {
-  //   // Check initial count
-  //   let cntNone = await getGamePlayerCount("1");
-  //   chai.expect(cntNone).to.eq(0);
+  test("gets a game player count", async () => {
+    // Check initial count
+    let cntNone = await getGamePlayerCount("1");
+    chai.expect(cntNone).to.eq(0);
 
-  //   // Add some players to the game
-  //   await Game.findById("1", async (err, game) => {
-  //     game.players = ["player 1", "player 2"];
-  //     await game.save();
-  //   });
+    // Add some players to the game
+    await Game.findById("1", async (err, game) => {
+      game.players = ["player 1", "player 2"];
+      await game.save();
+    });
 
-  //   // Check count after adding two players
-  //   let cntTwo = await getGamePlayerCount("1");
-  //   chai.expect(cntTwo).to.eq(2);
-  // });
+    // Check count after adding two players
+    let cntTwo = await getGamePlayerCount("1");
+    chai.expect(cntTwo).to.eq(2);
+  });
 
   // test("gets a random player from a game", async () => {
   //   // Add some players to the game
