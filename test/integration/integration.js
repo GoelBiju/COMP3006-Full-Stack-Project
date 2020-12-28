@@ -31,6 +31,6 @@ suite("Integration Tests", function () {
     // disconnecting here works.
     // return mongoose.disconnect(done);
     mongoose.connection.close();
-    app.close();
+    server.app.close();
   });
 });
