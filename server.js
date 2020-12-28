@@ -18,12 +18,11 @@ mongoose
     useUnifiedTopology: true,
     useNewUrlParser: true,
   })
-  .then(() => {
-    mongoose.set("debug", true);
+  .then(async () => {
     console.log("Connected to database.");
 
     // Create a single game.
-    Game.findById("1", async function (err, game) {
+    await Game.findById("1", async function (err, game) {
       if (game) {
         game.players = [];
         game.board = [
@@ -46,6 +45,9 @@ mongoose
         console.log("New game with ID: ", g._id);
       }
     });
+
+    // Set mongoose debugging information to show in console
+    mongoose.set("debug", true);
   });
 
 // Initialise the app

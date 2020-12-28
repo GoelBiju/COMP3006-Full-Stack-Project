@@ -3,11 +3,15 @@ let chaiHttp = require("chai-http");
 let server = require("../../server");
 
 const mongoose = require("mongoose");
-const { app } = require("../../server");
 
 chai.use(chaiHttp);
 
-suite("Integration Tests for landing page", function () {
+suite("Integration Tests", function () {
+  suiteSetup(() => {
+    // Minimise debugging information in tests
+    mongoose.set("debug", false);
+  });
+
   test("Test GET /", function () {
     let app = server.app;
 
