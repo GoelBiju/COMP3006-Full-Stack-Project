@@ -1,70 +1,152 @@
+let chai = require("chai");
+const { connectTestDb, disconnectTestDb } = require("../testDb");
+
 const Game = require("../../src/models/Game");
-const { getGame, addGamePlayer } = require("../../src/controllers/game");
+const {
+  getGame,
+  addGamePlayer,
+  getGamePlayerCount,
+  getRandomPlayer,
+  getGamePlayer,
+  updateNextMove,
+  switchMove,
+} = require("../../src/controllers/game");
 
-const chai = require("chai");
-const sinon = require("sinon");
+suite("Game - Controller/Model", () => {
+  let gameData;
 
-suite("Game", () => {
-  let mockGameData;
+  suiteSetup(async () => {
+    // Start test database
+    await connectTestDb();
 
-  suiteSetup(() => {
     // Create expected game data
-    mockGameData = {
-      _id: "1",
+    gameData = {
+      _id: 1,
       board: [
         [-1, -1, -1, -1, -1, -1, -1],
         [-1, -1, -1, -1, -1, -1, -1],
         [-1, -1, -1, -1, -1, -1, -1],
-        [1, 1, -1, -1, -1, -1, -1],
-        [0, 0, -1, -1, -1, -1, -1],
-        [0, 1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
       ],
-      players: ["player 1"],
-      nextMove: 1,
+      players: [],
+      nextMove: -1,
     };
-
-    // amendedGameData = {
-    //   ...mockGameData,
-    //   players: ["player 1", "player 2"],
-    // };
-
-    // let mockFindById = {
-    //   exec: function () {
-    //     Promise.resolve(mockGameData);
-    //   },
-    // };
-
-    // Stub the findById Game model call
-    // gameStub = sinon.stub(Game, "findById").returns(mockFindById);
-
-    // saveStub = sinon.stub(Game.prototype, "save").callsFake(function () {
-    //   return Promise.resolve(this);
-    // });
   });
 
-  // test.skip("gets a game by ID", async (done) => {
-  //   let game = await getGame(1);
+  setup(async () => {
+    // Create an default game
+    const g = await Game.create({ _id: "1" });
+    await g.save();
+  });
 
-  //   console.log("return game: ", game);
-  //   chai.expect(game).to.eq(mockGameData);
-  // });
+  teardown(async () => {
+    await Game.deleteOne({ _id: "1" });
+  });
 
-  // test.skip("adds a game player", async () => {
-  //   let added = await addGamePlayer("player 2");
+  test("gets a default game by ID", async () => {
+    // Find a game with ID 1
+    await getGame("1").then((game) => {
+      // Assert all fields are set to default
+      chai.expect(game._id).to.equal(gameData._id);
+      chai.expect(game.board).to.eql(gameData.board);
+      chai.expect(game.players).to.eql(gameData.players);
+      chai.expect(game.nextMove).to.equal(gameData.nextMove);
+    });
+  });
 
-  //   chai.expect(added).to.eq(true);
-  // });
+  test("adds a game player", async () => {
+    let addedOne = await addGamePlayer("1", "player 1");
+    chai.expect(addedOne).to.eq(true);
 
-  // test.skip("gets a game player count", () => {});
+    let addedTwo = await addGamePlayer("1", "player 2");
+    chai.expect(addedTwo).to.eq(true);
 
-  // test.skip("gets game players", () => {});
+    // Adding a third player which should not be accepted
+    let addedThree = await addGamePlayer("1", "player 3");
+    chai.expect(addedThree).to.eq(false);
+  });
 
-  // test.skip("gets a random player from a game", () => {});
+  test("gets a game player count", async () => {
+    // Check initial count
+    let cntNone = await getGamePlayerCount("1");
+    chai.expect(cntNone).to.eq(0);
 
-  // test.skip("does not add a player for a full game", () => {});
+    // Add some players to the game
+    await Game.findById("1", async (err, game) => {
+      game.players = ["player 1", "player 2"];
+      await game.save();
+    });
 
-  suiteTeardown(() => {
-    // Restore stubbed functions
-    gameStub.restore();
+    // Check count after adding two players
+    let cntTwo = await getGamePlayerCount("1");
+    chai.expect(cntTwo).to.eq(2);
+  });
+
+  test("gets a random player from a game", async () => {
+    // Add some players to the game
+    await Game.findById("1", async (err, game) => {
+      game.players = ["player 1", "player 2"];
+      await game.save();
+    });
+
+    let counter = 0;
+    for (let i = 0; i < 100; i++) {
+      let p = await getRandomPlayer("1");
+
+      chai.assert.include([0, 1], p, "Player not found");
+      if (p == 1) {
+        counter++;
+      }
+    }
+
+    // Counter selects player 1 approximately 50 times (+/- 10)
+    chai.assert.approximately(50, counter, 20);
+  });
+
+  test("gets game player username by ID and index", async () => {
+    // Add some players to the game
+    await Game.findById("1", async (err, game) => {
+      game.players = ["test"];
+      await game.save();
+    });
+
+    const player = await getGamePlayer("1", 0);
+    chai.expect(player).to.eq("test");
+  });
+
+  test("update next move", async () => {
+    // Check game is set to -1
+    await Game.findById("1", async (err, game) => {
+      chai.expect(game.nextMove).to.eq(-1);
+    });
+
+    // Set game next move to 1
+    const updated = await updateNextMove("1", 1);
+    chai.expect(updated).to.eq(true);
+
+    // Check game is set to 1
+    const game = await Game.findById("1").exec();
+    chai.assert.equal(game.nextMove, 1, "Next move not updated to 1");
+  });
+
+  test("switch moves ", async () => {
+    // Set nextMove to 0
+    let game = await Game.findById("1").exec();
+    game.nextMove = 0;
+    await game.save();
+
+    // Check game is set to -1
+    game = await Game.findById("1").exec();
+    chai.assert.equal(game.nextMove, 0, "Next move not set to 0");
+
+    // Switch moves to 1
+    const nextPlayer = await switchMove("1", 0);
+    chai.assert.equal(nextPlayer, 1, "Next move not updated to 1");
+  });
+
+  suiteTeardown(async () => {
+    await disconnectTestDb();
   });
 });
