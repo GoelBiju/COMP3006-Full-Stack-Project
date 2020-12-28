@@ -32,7 +32,9 @@ suite("Integration Tests", function () {
     // Rather than calling server.stop,
     // disconnecting here works.
     // return mongoose.disconnect(done);
-    mongoose.disconnect(() => done());
-    server.app.close();
+    mongoose.disconnect(() => {
+      mongoose.connection.close(done);
+      server.app.close();
+    });
   });
 });
