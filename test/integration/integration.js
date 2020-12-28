@@ -2,6 +2,9 @@ let chai = require("chai");
 let chaiHttp = require("chai-http");
 let server = require("../../server");
 
+const mongoose = require("mongoose");
+const { app } = require("../../server");
+
 chai.use(chaiHttp);
 
 suite("Integration Tests for landing page", function () {
@@ -17,7 +20,13 @@ suite("Integration Tests for landing page", function () {
       });
   });
 
+  // TODO: This is causing issues with TravisCI
+  //       by exceeding the timeout limit (possibly to do with done()/promises).
   suiteTeardown(() => {
-    server.stop();
+    // Rather than calling server.stop,
+    // disconnecting here works.
+    // return mongoose.disconnect(done);
+    mongoose.connection.close();
+    app.close();
   });
 });
