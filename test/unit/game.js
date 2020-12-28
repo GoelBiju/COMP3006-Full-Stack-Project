@@ -10,7 +10,7 @@ const {
   getGamePlayer,
   updateNextMove,
   switchMove,
-} = require("../../src/controllers/game");
+} = require("../../src/controllers/games");
 
 suite("Game - Controller/Model", () => {
   let gameData;
