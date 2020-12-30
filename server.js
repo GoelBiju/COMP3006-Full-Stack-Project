@@ -54,6 +54,9 @@ mongoose
 let app = express();
 let server = http.createServer(app);
 
+// Use ejs
+app.set("view engine", "ejs");
+
 // Configure to use statics
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -61,6 +64,8 @@ app.use(express.static(path.join(__dirname, "public")));
 let io = socketIo(server);
 
 // Define routes.
+app.get("/login", routes.loginRoute);
+
 app.get("/", routes.gameRoute);
 
 // Handle websocket connections.

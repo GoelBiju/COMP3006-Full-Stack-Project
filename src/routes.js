@@ -1,7 +1,19 @@
 let path = require("path");
 
-function gameRoute(request, response) {
-  response.sendFile(path.join(__dirname, "views/index.html"));
+function landingRoute(req, res) {
+  res.render("game", { gameId: req.params.game });
 }
 
-module.exports.gameRoute = gameRoute;
+function loginRoute(req, res) {
+  res.render("login");
+}
+
+function gameRoute(req, res) {
+  res.sendFile(path.join(__dirname, "views/index.html"));
+}
+
+module.exports = {
+  landingRoute,
+  loginRoute,
+  gameRoute,
+};
