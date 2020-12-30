@@ -1,25 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Bootstrap -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
-      crossorigin="anonymous"
-    />
-
-    <!-- Site CSS -->
-    <link href="site.css" rel="stylesheet" />
+    <!-- Include page header -->
+    <%- include("../partials/head"); %>
 
     <!-- Login CSS -->
     <link href="login.css" rel="stylesheet" />
 
     <title>Connect Four - Login</title>
   </head>
+
   <body class="text-center">
     <main class="form-signin">
       <form>
@@ -44,7 +34,7 @@
           required
         />
 
-        <div class="login-buttons">
+        <div>
           <button class="w-100 btn btn-lg btn-primary login-btn" type="submit">
             Sign in
           </button>

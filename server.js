@@ -1,8 +1,10 @@
-let express = require("express");
-let http = require("http");
-let path = require("path");
-let socketIo = require("socket.io");
-let mongoose = require("mongoose");
+const express = require("express");
+const http = require("http");
+const path = require("path");
+const socketIo = require("socket.io");
+const mongoose = require("mongoose");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
 
 let routes = require("./src/routes");
 let socketHandle = require("./src/socket");
@@ -13,64 +15,79 @@ const Game = require("./src/models/Game");
 let mongoDBUrl =
   process.env.MONGODB_URI || "mongodb://localhost:27017/connect4";
 
-mongoose
-  .connect(mongoDBUrl, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  })
-  .then(async () => {
-    console.log("Connected to database.");
+mongoose.connect(mongoDBUrl, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+});
 
-    // Create a single game.
-    await Game.findById("1", async function (err, game) {
-      if (game) {
-        game.players = [];
-        game.board = [
-          [-1, -1, -1, -1, -1, -1, -1],
-          [-1, -1, -1, -1, -1, -1, -1],
-          [-1, -1, -1, -1, -1, -1, -1],
-          [-1, -1, -1, -1, -1, -1, -1],
-          [-1, -1, -1, -1, -1, -1, -1],
-          [-1, -1, -1, -1, -1, -1, -1],
-        ];
-        game.nextMove = -1;
+// Hold a reference to the connection.
+const db = mongoose.connection;
 
-        game.save();
-        console.log("Reset test values.");
-      } else {
-        console.log("No game with ID: 1");
+db.on("error", (err) => {
+  console.log(err);
+});
 
-        const g = await Game.create({ _id: "1" });
-        await g.save();
-        console.log("New game with ID: ", g._id);
-      }
-    });
+db.once("open", async () => {
+  console.log("Connected to database.");
 
-    // Set mongoose debugging information to show in console
-    mongoose.set("debug", true);
+  // Create a single game.
+  await Game.findById("1", async function (err, game) {
+    if (game) {
+      game.players = [];
+      game.board = [
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1],
+      ];
+      game.nextMove = -1;
+
+      game.save();
+      console.log("Reset test values.");
+    } else {
+      console.log("No game with ID: 1");
+
+      const g = await Game.create({ _id: "1" });
+      await g.save();
+      console.log("New game with ID: ", g._id);
+    }
   });
+
+  // Set mongoose debugging information to show in console
+  mongoose.set("debug", true);
+});
 
 // Initialise the app
 let app = express();
 let server = http.createServer(app);
 
-// Use ejs
-app.set("view engine", "ejs");
+// Set up websocket.
+let io = socketIo(server);
+
+// Configure app
+app.use(morgan("dev"));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Configure to use statics
 app.use(express.static(path.join(__dirname, "public")));
 
-// Set up websocket.
-let io = socketIo(server);
+// Use ejs
+app.set("view engine", "ejs");
 
 // Define routes.
+app.get("/", routes.gameRoute);
+
 app.get("/login", routes.loginRoute);
 
-app.get("/", routes.gameRoute);
+app.get("/register", routes.registerRoute);
 
 // Handle websocket connections.
 io.on("connection", socketHandle.handleConnection);
 
+// Cleanup functions for running locally
 const cleanUp = (eventType) => {
   stop();
 };
