@@ -11,7 +11,7 @@ const {
   updateNextMove,
   switchMove,
   getGamePlayers,
-} = require("../../src/controllers/games");
+} = require("../../src/controllers/GameController");
 
 suite("Game - Controller/Model", () => {
   let gameData;
