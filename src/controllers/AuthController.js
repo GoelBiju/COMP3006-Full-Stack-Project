@@ -9,27 +9,27 @@ const register = (req, res, next) => {
       res.json({
         error: err,
       });
+    } else {
+      let user = new User({
+        username: req.body.username,
+        emailAddress: req.body.emailAddress,
+        password: hashedPassword,
+      });
+
+      user
+        .save()
+        .then((user) => {
+          res.json({
+            message: "User registration successful",
+          });
+        })
+        .catch((error) => {
+          res.json({
+            message: "An error occured",
+          });
+        });
     }
   });
-
-  let user = new User({
-    username: req.body.username,
-    emailAddress: req.body.emailAddress,
-    password: hashedPassword,
-  });
-
-  user
-    .save()
-    .then((user) => {
-      res.json({
-        message: "User registration successful",
-      });
-    })
-    .catch((error) => {
-      res.json({
-        message: "An error occured",
-      });
-    });
 };
 
 module.exports = {

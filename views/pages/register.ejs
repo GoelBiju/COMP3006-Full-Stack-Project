@@ -4,8 +4,8 @@
     <!-- Include page header -->
     <%- include("../partials/head"); %>
 
-    <!-- Login CSS -->
-    <link href="login.css" rel="stylesheet" />
+    <!-- Account CSS -->
+    <link href="account.css" rel="stylesheet" />
 
     <title>Connect Four - Register</title>
   </head>
@@ -15,6 +15,16 @@
       <form>
         <h1>Register for Connect4</h1>
 
+        <label for="inputUsername" class="visually-hidden">Username</label>
+        <input
+          type="text"
+          id="inputUsername"
+          class="form-control"
+          placeholder="Username"
+          required
+          autofocus
+        />
+
         <label for="inputEmail" class="visually-hidden">Email Address</label>
         <input
           type="email"
@@ -22,7 +32,6 @@
           class="form-control"
           placeholder="Email address"
           required
-          autofocus
         />
 
         <label for="inputPassword" class="visually-hidden">Password</label>

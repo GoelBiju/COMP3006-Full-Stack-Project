@@ -6,9 +6,13 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 
+// Page routes.
 let routes = require("./src/routes");
 let socketHandle = require("./src/socket");
 
+const authRoute = require("./src/routes/auth");
+
+// TODO: Needs to be removed once tested
 const Game = require("./src/models/Game");
 
 // Database connection using Heroku or localhost
@@ -77,12 +81,15 @@ app.use(express.static(path.join(__dirname, "public")));
 // Use ejs
 app.set("view engine", "ejs");
 
-// Define routes.
+// Define page routes.
 app.get("/", routes.gameRoute);
 
 app.get("/login", routes.loginRoute);
 
 app.get("/register", routes.registerRoute);
+
+// Define API routes.
+app.use("/api", authRoute);
 
 // Handle websocket connections.
 io.on("connection", socketHandle.handleConnection);
