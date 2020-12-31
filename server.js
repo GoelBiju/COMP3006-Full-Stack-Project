@@ -22,6 +22,7 @@ let mongoDBUrl =
 mongoose.connect(mongoDBUrl, {
   useUnifiedTopology: true,
   useNewUrlParser: true,
+  useCreateIndex: true,
 });
 
 // Hold a reference to the connection.

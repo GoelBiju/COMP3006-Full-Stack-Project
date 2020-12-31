@@ -7,55 +7,70 @@
     <!-- Account CSS -->
     <link href="account.css" rel="stylesheet" />
 
+    <script src="/account.js" defer></script>
+
     <title>Connect Four - Register</title>
   </head>
 
-  <body class="text-center">
-    <main class="form-signin">
-      <form>
+  <body>
+    <div id="register-alert" class="alert" role="alert"></div>
+    <div id="content" class="form-signin text-center">
+      <form id="registration">
         <h1>Register for Connect4</h1>
 
-        <label for="inputUsername" class="visually-hidden">Username</label>
+        <label for="username" class="visually-hidden">Username</label>
         <input
           type="text"
-          id="inputUsername"
+          name="username"
+          id="username"
           class="form-control"
           placeholder="Username"
+          autocomplete="username"
           required
           autofocus
         />
 
-        <label for="inputEmail" class="visually-hidden">Email Address</label>
+        <!-- <label for="emailAddress" class="visually-hidden">Email Address</label>
         <input
           type="email"
-          id="inputEmail"
+          name="emailAddress"
+          id="emailAddress"
           class="form-control"
           placeholder="Email address"
+          autocomplete="email"
           required
-        />
+        /> -->
 
-        <label for="inputPassword" class="visually-hidden">Password</label>
+        <label for="password" class="visually-hidden">Password</label>
         <input
+          name="password"
+          id="password"
           type="password"
-          id="inputPassword"
           class="form-control"
           placeholder="Password"
+          autocomplete="new-password"
           required
         />
 
-        <label for="inputConfirmPassword" class="visually-hidden"
+        <label for="confirmPassword" class="visually-hidden"
           >Confirm Password</label
         >
         <input
+          name="confirmPassword"
+          id="confirmPassword"
           type="password"
-          id="inputConfirmPassword"
           class="form-control"
           placeholder="Confirm Password"
+          autocomplete="new-password"
           required
         />
 
         <div>
-          <button class="w-100 btn btn-lg btn-primary login-btn" type="submit">
+          <button
+            id="register-btn"
+            class="w-100 btn btn-lg btn-primary login-btn"
+            type="button"
+          >
             Register
           </button>
           <a href="/login" class="w-100 btn btn-lg btn-secondary register-btn">
@@ -63,6 +78,6 @@
           </a>
         </div>
       </form>
-    </main>
+    </div>
   </body>
 </html>
