@@ -18,8 +18,6 @@ $(function () {
 
             // Save token to localStorage
             localStorage.setItem("token", response.token);
-
-            // Re-direct to home page
           } else {
             $("#register-alert").html(response.message);
             $("#register-alert").addClass("alert-danger");

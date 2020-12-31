@@ -81,12 +81,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Use ejs
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "/src/views"));
 
 // Define page routes.
-app.get("/", routes.gameRoute);
-
+app.get("/", routes.landingRoute);
+app.get("/game", routes.gameRoute);
 app.get("/login", routes.loginRoute);
-
 app.get("/register", routes.registerRoute);
 
 // Define API routes.
