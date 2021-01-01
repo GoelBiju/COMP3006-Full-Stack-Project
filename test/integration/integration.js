@@ -3,7 +3,6 @@ let chaiHttp = require("chai-http");
 let server = require("../../server");
 
 const mongoose = require("mongoose");
-const { deleteOne } = require("../../src/models/Game");
 
 chai.use(chaiHttp);
 
