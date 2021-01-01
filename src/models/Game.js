@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 // Create Game schema
 const GameSchema = mongoose.Schema({
-  _id: { type: Number, required: true },
+  _id: {
+    type: Number,
+    required: true,
+  },
   board: {
     type: [[Number]],
     default: [
@@ -15,7 +18,10 @@ const GameSchema = mongoose.Schema({
     ],
   },
   players: [String],
-  nextMove: { type: Number, default: -1 },
+  nextMove: {
+    type: Number,
+    default: -1,
+  },
 });
 
 module.exports = mongoose.model("Game", GameSchema);

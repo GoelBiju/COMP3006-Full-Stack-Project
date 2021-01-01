@@ -26,9 +26,14 @@ suite("Integration Tests", function () {
 
   // TODO: This is causing issues with TravisCI
   //       by exceeding the timeout limit (possibly to do with done()/promises).
-  // suiteTeardown((done) => {
-  //   // Rather than calling server.stop,
-  //   // disconnecting here works.
-  //   return mongoose.disconnect(done);
-  // });
+  // This may still not be closed correctly.
+  suiteTeardown((done) => {
+    // Rather than calling server.stop,
+    // disconnecting here works.
+    // return mongoose.disconnect(done);
+    mongoose.disconnect(() => {
+      mongoose.connection.close(done);
+      server.app.close();
+    });
+  });
 });

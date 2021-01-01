@@ -3,7 +3,7 @@
 //  - player
 //  - column
 
-const { getGame } = require("./controllers/games");
+const { getGame } = require("./controllers/GameController");
 
 // Returns the row the move has been made on
 async function makeMove(gameId, player, column) {

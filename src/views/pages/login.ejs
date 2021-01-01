@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Include page head -->
+    <%- include("../partials/head"); %>
+
+    <!-- Account CSS/JS -->
+    <link href="account.css" rel="stylesheet" />
+    <script src="/account.js" defer></script>
+
+    <title>Connect Four - Login</title>
+  </head>
+
+  <body id="content">
+    <main class="form-signin text-center">
+      <form>
+        <h1>Sign into Connect4</h1>
+
+        <label for="username" class="visually-hidden">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="form-control"
+          placeholder="Username"
+          required
+          autofocus
+        />
+
+        <label for="password" class="visually-hidden">Password</label>
+        <input
+          type="password"
+          id="password"
+          class="form-control"
+          placeholder="Password"
+          required
+        />
+
+        <div>
+          <button
+            id="login-btn"
+            class="w-100 btn btn-lg btn-primary login-btn"
+            type="button"
+          >
+            Login
+          </button>
+          <a
+            href="/register"
+            class="w-100 btn btn-lg btn-secondary register-btn"
+          >
+            Register
+          </a>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>
