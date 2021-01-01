@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Include page head -->
+    <%- include("./partials/head"); %>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/style.css" />
+
+    <!-- socket.io -->
+    <script src="/socket.io/socket.io.js" defer></script>
+
+    <!-- Game related actions -->
+    <script src="/client.js" defer></script>
+
+    <title>Connect4 - Play</title>
+  </head>
+
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <h3>Connect4 - Play</h3>
+
+        <button id="disconnect-btn" class="btn btn-danger" type="button">
+          Disconnect
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <body>
+    <div id="connection-details">
+      <label>Username:</label>
+      <input id="player-name" />
+      <button id="join">Join</button>
+
+      <p id="conn-status">No connection</p>
+      <p id="game-status">No game</p>
+
+      <p id="opponent-name">No opponent</p>
+      <p id="player-turn"></p>
+    </div>
+
+    <div id="game">
+      <table>
+        <!-- Board rows -->
+        <tr>
+          <!-- Board columns -->
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+        </tr>
+        <tr>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+        </tr>
+        <tr>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+        </tr>
+        <tr>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+        </tr>
+        <tr>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+        </tr>
+        <tr>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+          <td class="gameSlot"></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

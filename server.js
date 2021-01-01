@@ -89,7 +89,7 @@ app.set("views", path.join(__dirname, "/src/views"));
 
 // Define page routes.
 app.get("/", authenticate, routes.homeRoute);
-app.get("/game", authenticate, routes.gameRoute);
+app.get("/game/:gameId", authenticate, routes.gameRoute);
 app.get("/login", routes.loginRoute);
 app.get("/register", routes.registerRoute);
 

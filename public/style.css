@@ -25,21 +25,10 @@ h1 {
   padding: 1.5rem;
 }
 
-.slot {
+td.gameSlot {
   width: 90px;
   height: 90px;
   background: white;
   border: 1px solid black;
   border-radius: 50%;
-}
-
-#reset {
-  position: absolute;
-  top: 95vh;
-  left: 50%;
-  transform: translate(-50%);
-  border: 1px solid black;
-  width: 5rem;
-  text-align: center;
-  cursor: pointer;
 }
