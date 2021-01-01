@@ -4,6 +4,12 @@
     <!-- Include page head -->
     <%- include("../partials/head"); %>
 
+    <style>
+      .row > * {
+        margin: 10px;
+      }
+    </style>
+
     <title>Connect4 - Home</title>
   </head>
   <header>
@@ -15,19 +21,25 @@
       <div class="row">
         <div class="card">
           <div class="card-body">
-            Write information regarding how to use the application
+            View your game history or select to create/join a game.
           </div>
         </div>
       </div>
       <div class="row">
+        <div class="d-flex justify-content-center">
+          <button class="btn btn-primary btn-lg" type="button">
+            Create Game
+          </button>
+        </div>
+
         <div class="col">
           <div class="card">
             <div class="card-body">
-              My match history
+              <h2>Game history</h2>
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">#ID</th>
                     <th scope="col">Date</th>
                     <th scope="col">Opponent</th>
                     <th scope="col">Score</th>
@@ -69,11 +81,11 @@
         <div class="col">
           <div class="card">
             <div class="card-body">
-              Join a game
+              <h2>Join game</h2>
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
+                    <th scope="col">#ID</th>
                     <th scope="col">Opponent</th>
                     <th scope="col">Status</th>
                     <th scope="col"></th>
