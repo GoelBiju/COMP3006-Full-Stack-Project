@@ -10,14 +10,14 @@ $(function () {
         $("#login-alert").addClass("close");
         console.log(response);
         if (status == "success") {
-          if (response.login) {
-            let message = `${response.message}, re-directing to homepage`;
+          if (response.login && response.login) {
+            let message = `${response.message}, re-directing...`;
             $("#register-alert").html(message);
             $("#register-alert").addClass("alert-success");
             $("#register-alert").addClass("show");
 
-            // Save token to localStorage
-            localStorage.setItem("token", response.token);
+            // Re-direct to home.
+            window.location = response.redirectUrl;
           } else {
             $("#register-alert").html(response.message);
             $("#register-alert").addClass("alert-danger");

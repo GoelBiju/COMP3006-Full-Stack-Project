@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Include page head -->
+    <%- include("../partials/head"); %>
+
+    <title>Connect4 - Home</title>
+  </head>
+  <header>
+    <!-- Include page header -->
+    <%- include("../partials/header"); %>
+  </header>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="card">
+          <div class="card-body">
+            Write information regarding how to use the application
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              My match history
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Opponent</th>
+                    <th scope="col">Score</th>
+                    <th scope="col">Winner</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Win -->
+                  <tr>
+                    <th scope="row">1234</th>
+                    <td>2020-09-01</td>
+                    <td>test</td>
+                    <td class="table-success">4-0</td>
+                    <td>goel</td>
+                  </tr>
+
+                  <!-- Draw -->
+                  <tr>
+                    <th scope="row">1321</th>
+                    <td>2020-09-02</td>
+                    <td>tom</td>
+                    <td class="table-warning">0-0</td>
+                    <td>goel</td>
+                  </tr>
+
+                  <!-- Loss -->
+                  <tr>
+                    <th scope="row">1254</th>
+                    <td>2020-09-03</td>
+                    <td>john</td>
+                    <td class="table-danger">4-8</td>
+                    <td>john</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              Join a game
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Opponent</th>
+                    <th scope="col">Status</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- In Play (show in a separate table) -->
+                  <tr>
+                    <th scope="row">1234</th>
+                    <td>test</td>
+                    <td colspan="2">In Play</td>
+                  </tr>
+
+                  <!-- Available -->
+                  <tr>
+                    <th scope="row">1321</th>
+                    <td>john</td>
+                    <td>Available</td>
+                    <td>
+                      <a href="#" class="btn btn-primary btn-sm" role="button"
+                        >Play</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

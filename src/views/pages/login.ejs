@@ -4,8 +4,9 @@
     <!-- Include page head -->
     <%- include("../partials/head"); %>
 
-    <!-- Account CSS -->
+    <!-- Account CSS/JS -->
     <link href="account.css" rel="stylesheet" />
+    <script src="/account.js" defer></script>
 
     <title>Connect Four - Login</title>
   </head>
@@ -26,18 +27,22 @@
           autofocus
         />
 
-        <label for="inputPassword" class="visually-hidden">Password</label>
+        <label for="password" class="visually-hidden">Password</label>
         <input
           type="password"
-          id="inputPassword"
+          id="password"
           class="form-control"
           placeholder="Password"
           required
         />
 
         <div>
-          <button class="w-100 btn btn-lg btn-primary login-btn" type="submit">
-            Sign in
+          <button
+            id="login-btn"
+            class="w-100 btn btn-lg btn-primary login-btn"
+            type="button"
+          >
+            Login
           </button>
           <a
             href="/register"

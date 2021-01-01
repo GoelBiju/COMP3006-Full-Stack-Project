@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const jwtKey = "connect4";
-const expiresSecs = 300;
+const expiresSecs = 3600;
 
 const register = (req, res, next) => {
   bcrypt.hash(req.body.password, 10, function (err, hashedPassword) {
@@ -53,15 +53,18 @@ const login = (req, res, next) => {
           if (result) {
             // Create JWT token to return
             let token = jwt.sign({ username: user.username }, jwtKey, {
+              algorithm: "HS256",
               expiresIn: expiresSecs,
             });
+            console.log("Token: ", token);
 
-            // res.json({
-            //   login: true,
-            //   message: "Login successful",
-            //   token,
-            // });
+            // Set a "token" cookie
             res.cookie("token", token, { maxAge: expiresSecs * 1000 });
+            res.json({
+              login: true,
+              message: "Login successful",
+              redirectUrl: "/",
+            });
             res.end();
           } else {
             res.json({
@@ -80,18 +83,16 @@ const login = (req, res, next) => {
   });
 };
 
-const welcome = (req, res) => {
-  // Obtain session token from request cookies,
-  // comes with every request
-  const token = req.cookies.token;
-
-  if (!token) {
-    return res.redirect("/").end();
-  }
+const logout = (req, res) => {
+  // Clear cookies and re-direct to login
+  res.clearCookie("token");
+  res.json({
+    redirectUrl: "/",
+  });
 };
 
 module.exports = {
   register,
   login,
-  welcome,
+  logout,
 };

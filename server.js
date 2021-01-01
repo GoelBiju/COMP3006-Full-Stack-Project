@@ -3,14 +3,17 @@ const http = require("http");
 const path = require("path");
 const socketIo = require("socket.io");
 const mongoose = require("mongoose");
+
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 // Page routes.
 let routes = require("./src/routes");
 let socketHandle = require("./src/socket");
 
-const authRoute = require("./src/routes/auth");
+const authRoute = require("./src/apiRoutes/auth");
+const authenticate = require("./src/middleware/authenticate");
 
 // TODO: Needs to be removed once tested
 const Game = require("./src/models/Game");
@@ -75,6 +78,7 @@ let io = socketIo(server);
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // Configure to use statics
 app.use(express.static(path.join(__dirname, "public")));
@@ -84,8 +88,8 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "/src/views"));
 
 // Define page routes.
-app.get("/", routes.landingRoute);
-app.get("/game", routes.gameRoute);
+app.get("/", authenticate, routes.homeRoute);
+app.get("/game", authenticate, routes.gameRoute);
 app.get("/login", routes.loginRoute);
 app.get("/register", routes.registerRoute);
 

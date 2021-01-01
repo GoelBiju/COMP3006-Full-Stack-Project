@@ -1,7 +1,7 @@
 let path = require("path");
 
-function landingRoute(req, res) {
-  res.render("pages/landing");
+function homeRoute(req, res) {
+  res.render("pages/home");
 }
 
 function gameRoute(req, res) {
@@ -18,7 +18,7 @@ function registerRoute(req, res) {
 }
 
 module.exports = {
-  landingRoute,
+  homeRoute,
   gameRoute,
   loginRoute,
   registerRoute,
