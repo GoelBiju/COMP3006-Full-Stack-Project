@@ -5,13 +5,17 @@
     <%- include("./partials/head"); %>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/game.css" />
 
     <!-- socket.io -->
     <script src="/socket.io/socket.io.js" defer></script>
 
     <!-- Game related actions -->
-    <script src="/client.js" defer></script>
+    <script>
+      // Get game ID
+      const gameId = "<%= gameId %>";
+    </script>
+    <script src="/game.js" defer></script>
 
     <title>Connect4 - Play</title>
   </head>
@@ -20,6 +24,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <h3>Connect4 - Play</h3>
+        <p>Game: <%= gameId %></p>
 
         <button id="disconnect-btn" class="btn btn-danger" type="button">
           Disconnect
@@ -41,65 +46,126 @@
       <p id="player-turn"></p>
     </div>
 
-    <div id="game">
-      <table>
-        <!-- Board rows -->
-        <tr>
-          <!-- Board columns -->
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-        </tr>
-        <tr>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-        </tr>
-        <tr>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-        </tr>
-        <tr>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-        </tr>
-        <tr>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-        </tr>
-        <tr>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-          <td class="gameSlot"></td>
-        </tr>
-      </table>
+    <div class="container">
+      <div class="d-flex flex-row">
+        <div>
+          <div class="card" style="width: 18rem">
+            <!-- <img src="..." class="card-img-top" alt="..." /> -->
+            <svg
+              class="bd-placeholder-img card-img-top"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label="Placeholder: Image cap"
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+            >
+              <title>Placeholder</title>
+              <rect width="100%" height="100%" fill="#868e96"></rect>
+              <!-- <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text> -->
+            </svg>
+            <div class="card-body">
+              <h5 class="card-title">Username</h5>
+              <p class="card-text">User info</p>
+              <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div id="grid">
+            <table>
+              <!-- Board rows -->
+              <tr>
+                <!-- Board columns -->
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="width: 18rem">
+            <!-- <img src="..." class="card-img-top" alt="..." /> -->
+            <svg
+              class="bd-placeholder-img card-img-top"
+              width="100%"
+              height="100%"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label="Placeholder: Image cap"
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+            >
+              <title>Placeholder</title>
+              <rect width="100%" height="100%" fill="#868e96"></rect>
+              <!-- <text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text> -->
+            </svg>
+            <div class="card-body">
+              <h5 class="card-title">Opponent name</h5>
+              <p class="card-text">Opponent info</p>
+              <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>

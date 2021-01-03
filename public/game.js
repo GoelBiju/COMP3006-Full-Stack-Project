@@ -1,6 +1,9 @@
 $(function () {
   // Create socket
-  var socket = io();
+  let socket = io();
+
+  // Get gameId
+  console.log("Game ID: ", gameId);
 
   // Game settings
   let gameJoined = false;
@@ -8,10 +11,11 @@ $(function () {
 
   // Get table rows
   let tableRows = $("tr");
+  console.log("Got table rows: ", tableRows);
 
   // Get cells and slots
   let tableCells = $("td");
-  // let tableSlots = $(".slot");
+  console.log("Got table cells: ", tableCells);
 
   // Player information
   let gamePlayers = [];
@@ -118,7 +122,7 @@ $(function () {
 
   // Add event listener to each table cell to
   // find row and column location of cell
-  $("td").click(function (e) {
+  $(".cell").click(function (e) {
     console.log(
       "Row, Column of clicked: ",
       `${e.target.parentElement.rowIndex}, ${e.target.cellIndex}`

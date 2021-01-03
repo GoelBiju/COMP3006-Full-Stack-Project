@@ -5,8 +5,7 @@ function homeRoute(req, res) {
 }
 
 function gameRoute(req, res) {
-  // res.sendFile(path.join(__dirname, "views/index.html"));
-  res.render("game", { gameId: req.params.game });
+  res.render("game", { gameId: req.params.gameId });
 }
 
 function loginRoute(req, res) {
