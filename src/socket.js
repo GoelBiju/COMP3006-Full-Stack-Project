@@ -16,11 +16,25 @@ function handleConnection(socket) {
   // Emit a connection success to client
   socket.emit("connection", "success");
 
-  // Handle Join events.
-  socket.on("join", (userInfo) => handleJoin(socket, userInfo));
+  // Handle game events.
+  socket.on("game", (gameData) => handleGame(socket, gameData));
+}
 
-  // Handle Move events.
-  socket.on("move", (moveInfo) => handleMove(socket, moveInfo));
+// Handles all game related events.
+function handleGame(socket, gameData) {
+  console.log("Game data: ", gameData);
+
+  // Get game action and data.
+  const { action, data } = gameData;
+  switch (action) {
+    case "join":
+      handleJoin(socket, data);
+      break;
+
+    case "move":
+      handleMove(socket, data);
+      break;
+  }
 }
 
 async function handleJoin(socket, username) {
@@ -30,11 +44,12 @@ async function handleJoin(socket, username) {
   const res = await addGamePlayer(gameId, username);
   console.log("Add result: ", res);
   if (res) {
-    console.log("Added game player: ", username);
+    // Add the player to game.
+    socket.join(gameId);
+    console.log(`Added player (${username}) to game ${gameId}`);
 
     const count = await getGamePlayerCount(gameId);
     console.log("Game count: ", count);
-
     if (count == 2) {
       console.log("Game now full");
       // Choose a random player to start
@@ -50,7 +65,7 @@ async function handleJoin(socket, username) {
         console.log("Game players: ", gamePlayers);
 
         // Send to other player
-        socket.broadcast.emit("game", {
+        socket.to(gameId).emit("game", {
           status: "start",
           opponent: username,
           id: gamePlayers.findIndex((player) => player != username),

@@ -38,6 +38,18 @@ $(function () {
     }
   };
 
+  // Emit game action and data
+  function emitGameAction(action, data) {
+    socket.emit("game", {
+      gameId,
+      action,
+      data,
+    });
+
+    console.log(`Sent game action (${action}): ${data}`);
+  }
+
+  // TODO: When document is ready perform a join on the room.
   // Join a game
   $("#join").click(function () {
     // Reset other fields
@@ -51,8 +63,9 @@ $(function () {
     $("#player-turn").text("");
 
     // Send some user info
-    socket.emit("join", getUsername());
-    console.log("Sent join");
+    // socket.emit("join", getUsername());
+    // console.log("Sent join");
+    emitGameAction("join", getUsername());
   });
 
   // Connection message from server
@@ -132,7 +145,11 @@ $(function () {
   function handleMove(event) {
     if (gameJoined && myTurn()) {
       // Send a message to the server to move this piece.
-      socket.emit("move", {
+      // socket.emit("move", {
+      //   id: myId,
+      //   column: event.target.cellIndex,
+      // });
+      emitGameAction("move", {
         id: myId,
         column: event.target.cellIndex,
       });
