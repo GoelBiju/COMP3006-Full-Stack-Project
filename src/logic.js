@@ -44,6 +44,40 @@ async function makeMove(gameId, player, column) {
   return row;
 }
 
+// Performs board checks to get the current result:
+//  - -1 (error)
+//  - 0 (play on)
+//  - 1 (horizontal win)
+//  - 2 (vertical win)
+//  - 3 (diagonal win)
+//  - 4 (draw with board being full)
+async function performChecks(gameId) {
+  let checkResult = -1;
+
+  // Get the game.
+  await getGame(gameId).then(async (game) => {
+    // Check for next move
+    if (game) {
+      // Get the board
+      let board = game.board;
+
+      if (horizontalCheck(board)) {
+        checkResult = 1;
+      } else if (verticalCheck(board)) {
+        checkResult = 2;
+      } else if (diagonalChecks(board)) {
+        checkResult = 3;
+      } else if (isBoardFull(board)) {
+        checkResult = 4;
+      } else {
+        checkResult = 0;
+      }
+    }
+  });
+
+  return checkResult;
+}
+
 // Returns true if all four colours match
 // and is not set to the default (-1).
 function coinMatchCheck(one, two, three, four) {
@@ -161,4 +195,5 @@ module.exports = {
   verticalCheck,
   diagonalChecks,
   isBoardFull,
+  performChecks,
 };

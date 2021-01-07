@@ -6,7 +6,7 @@ const {
   switchMove,
   updateNextMove,
 } = require("./controllers/GameController");
-const { makeMove } = require("./logic");
+const { makeMove, performChecks } = require("./logic");
 
 // TODO: Implement rooms based on game
 const gameId = "1";
@@ -108,28 +108,71 @@ async function handleMove(socket, moveInfo) {
   const row = await makeMove(gameId, id, column);
   console.log("Moved row: ", row);
   if (row != -1) {
-    // Update next player
-    const nextMove = await switchMove(gameId, id);
-    if (nextMove != -1) {
-      let moveInfo = {
+    // Check current state of the board
+    const state = await performChecks(gameId);
+    console.log("Current game state: ", state);
+    if (state != -1) {
+      // Generate move info to send back to client
+      let info = {
         confirm: true,
+        state,
         row,
         column,
         // TODO: colour should be associated to players
         colour: id == 0 ? "red" : "yellow",
-        // Return next move
-        nextMove,
       };
 
-      // Send move to other player
-      socket.broadcast.emit("move", moveInfo);
+      // Check if states match a win
+      if ([1, 2, 3].includes(state)) {
+        // Send move to other player
+        socket.to(gameId).emit("move", {
+          ...info,
+          win: id,
+        });
 
-      // Send back a confirmation to change client board
-      socket.emit("move", moveInfo);
+        // Send back a confirmation to change client board
+        socket.emit("move", {
+          ...info,
+          result: id,
+        });
+      } else if (state == 4) {
+        // Send move to other player
+        socket.to(gameId).emit("move", {
+          ...info,
+          result: -1,
+        });
+
+        // Send back a confirmation to change client board
+        socket.emit("move", {
+          ...info,
+          result: -1,
+        });
+      } else {
+        // Update next player
+        const nextMove = await switchMove(gameId, id);
+        if (nextMove != -1) {
+          let moveInfo = {
+            ...info,
+
+            // Return next move
+            nextMove,
+          };
+          // Send move to other player
+          socket.to(gameId).emit("move", moveInfo);
+
+          // Send back a confirmation to change client board
+          socket.emit("move", moveInfo);
+        } else {
+          socket.emit("move", {
+            confirm: false,
+            reason: "Issue switching player",
+          });
+        }
+      }
     } else {
       socket.emit("move", {
-        confirm: "false",
-        reason: "Issue switching player",
+        confirm: false,
+        reason: "Unable to get new game state",
       });
     }
   } else {
