@@ -58,13 +58,24 @@ const login = (req, res, next) => {
             });
             console.log("Token: ", token);
 
+            // Set the redirect url
+            let redirectUrl = "/";
+            if (req.cookies.redirect) {
+              redirectUrl = req.cookies.redirect;
+              res.clearCookie("redirect");
+            }
+
             // Set a "token" cookie
-            res.cookie("token", token, { maxAge: expiresSecs * 1000 });
+            res.cookie("token", token, {
+              maxAge: expiresSecs * 1000,
+              httpOnly: true,
+            });
             res.json({
               login: true,
               message: "Login successful",
-              redirectUrl: "/",
+              redirectUrl,
             });
+
             res.end();
           } else {
             res.json({
@@ -86,6 +97,7 @@ const login = (req, res, next) => {
 const logout = (req, res) => {
   // Clear cookies and re-direct to login
   res.clearCookie("token");
+  res.clearCookie("redirect");
   res.json({
     redirectUrl: "/",
   });

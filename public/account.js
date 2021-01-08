@@ -16,7 +16,7 @@ $(function () {
             $("#register-alert").addClass("alert-success");
             $("#register-alert").addClass("show");
 
-            // Re-direct to home.
+            console.log("Login response: ", response);
             window.location = response.redirectUrl;
           } else {
             $("#register-alert").html(response.message);

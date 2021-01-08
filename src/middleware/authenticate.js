@@ -8,6 +8,9 @@ const authenticate = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
+    // Store a redirect url
+    res.cookie("redirect", req.path, { httpOnly: true, overwrite: true });
+
     // Redirect to login if cookie is not set
     return res.redirect("/login");
   }
