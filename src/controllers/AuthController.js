@@ -15,13 +15,13 @@ const register = (req, res, next) => {
     } else {
       let user = new User({
         username: req.body.username,
-        emailAddress: req.body.emailAddress,
         password: hashedPassword,
       });
 
       user
         .save()
         .then((user) => {
+          console.log(("Registered", user));
           res.json({
             registered: true,
             message: "Registered account successfully",
@@ -30,7 +30,7 @@ const register = (req, res, next) => {
         .catch((error) => {
           res.json({
             registered: false,
-            message: "An error occured",
+            message: `An error occured: ${error}`,
           });
         });
     }

@@ -114,6 +114,40 @@ const switchMove = async (gameId, currentPlayer) => {
   return nextPlayer;
 };
 
+// Update the state for a game
+const updateState = async (gameId, state) => {
+  let updated = false;
+
+  await getGame(gameId).then(async (game) => {
+    if (game) {
+      game.state = state;
+      await game.save();
+
+      updated = true;
+    }
+  });
+
+  return updated;
+};
+
+// Update the winner for a game
+const updateWinner = async (gameId, username) => {
+  let updated = false;
+
+  await getGame(gameId).then(async (game) => {
+    if (game) {
+      game.winner = username;
+      await game.save();
+
+      updated = true;
+    }
+  });
+
+  return updated;
+};
+
+// const updatePlayerScore = async(gameId);
+
 module.exports = {
   getGame,
   getGamePlayerCount,
@@ -123,4 +157,6 @@ module.exports = {
   addGamePlayer,
   updateNextMove,
   switchMove,
+  updateState,
+  updateWinner,
 };

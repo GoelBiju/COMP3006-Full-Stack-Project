@@ -51,6 +51,7 @@ db.once("open", async () => {
         [-1, -1, -1, -1, -1, -1, -1],
       ];
       game.nextMove = -1;
+      game.state = 0;
 
       game.save();
       console.log("Reset test values.");

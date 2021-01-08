@@ -11,16 +11,33 @@ $(function () {
 
   // Get table rows
   let tableRows = $("tr");
-  console.log("Got table rows: ", tableRows);
+  // console.log("Got table rows: ", tableRows);
 
   // Get cells and slots
   let tableCells = $("td");
-  console.log("Got table cells: ", tableCells);
+  // console.log("Got table cells: ", tableCells);
 
   // Player information
   let gamePlayers = [];
   let myId = -1;
   let currentPlayer = -1;
+
+  // Helper to set the modal with information
+  function showGameModal(message, redirect = "") {
+    // Set the body with the message
+    $("#gameModalBody").html(message);
+
+    if (!redirect) {
+      $("#gameModalBtn").click(function () {
+        $("#gameModal").modal("hide");
+      });
+    } else {
+      $("#gameModalBtn").attr("href", redirect);
+    }
+
+    // Show the modal
+    $("#gameModal").modal("show");
+  }
 
   // Get next move
   const getPlayerTurn = () => gamePlayers[currentPlayer];
@@ -63,8 +80,6 @@ $(function () {
     $("#player-turn").text("");
 
     // Send some user info
-    // socket.emit("join", getUsername());
-    // console.log("Sent join");
     emitGameAction("join", getUsername());
   });
 
@@ -103,7 +118,9 @@ $(function () {
   // When receiving reject message
   socket.on("reject", function (msg) {
     console.log("Rejected game: ", msg);
-    $("#game-status").text(msg);
+
+    // Redirect back to home
+    showGameModal(msg, "/");
   });
 
   socket.on("move", function (moveInfo) {

@@ -5,7 +5,11 @@ function homeRoute(req, res) {
 }
 
 function gameRoute(req, res) {
-  res.render("game", { gameId: req.params.gameId });
+  // TODO: Check if the game exists
+
+  // Get the logged in username
+  const { username } = req.user;
+  res.render("game", { username, gameId: req.params.gameId });
 }
 
 function loginRoute(req, res) {

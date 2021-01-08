@@ -93,7 +93,7 @@ async function handleJoin(socket, username) {
     }
   } else {
     // Reject if already full
-    socket.emit("reject", "Game full, try again later");
+    socket.emit("reject", "Game unavailable or full");
     console.log(`Connection from ${username} rejected, game full`);
   }
 }
