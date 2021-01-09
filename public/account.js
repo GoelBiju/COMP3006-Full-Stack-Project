@@ -16,7 +16,7 @@ $(function () {
             $("#register-alert").addClass("alert-success");
             $("#register-alert").addClass("show");
 
-            // Re-direct to home.
+            console.log("Login response: ", response);
             window.location = response.redirectUrl;
           } else {
             $("#register-alert").html(response.message);
@@ -43,15 +43,16 @@ $(function () {
         console.log(response);
         if (status == "success") {
           if (response.registered) {
+            $("#register-alert").addClass("alert-success");
+
             let message = `${response.message}, go back to <a href="/login">login page</a>.`;
             $("#register-alert").html(message);
-            $("#register-alert").addClass("alert-success");
             $("#register-alert").addClass("show");
           } else {
-            let message =
-              response.message + ": this username may already be in use.";
-            $("#register-alert").html(message);
             $("#register-alert").addClass("alert-danger");
+
+            let message = response.message;
+            $("#register-alert").html(message);
             $("#register-alert").addClass("show");
           }
         }

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Include page head -->
+    <%- include("./partials/head"); %>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/game.css" />
+
+    <!-- socket.io -->
+    <script src="/socket.io/socket.io.js" defer></script>
+
+    <!-- Game related actions -->
+    <script>
+      // Get game ID
+      const gameId = "<%= gameId %>";
+      const username = "<%= username %>";
+    </script>
+    <script src="/game.js" defer></script>
+
+    <title>Connect4 - Play</title>
+  </head>
+
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <h3>Connect4 - Play <small class="text-muted">(<%= gameId %>)</small></h3>
+        <button id="disconnect-btn" class="btn btn-danger" type="button">
+          Disconnect
+        </button>
+      </div>
+    </nav>
+  </header>
+
+      <!-- Game modal -->
+      <div
+      class="modal fade"
+      id="gameModal"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="gameModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="gameModalLabel">Connect4</h5>
+          </div>
+          <div id="gameModalBody" class="modal-body"></div>
+          <div class="modal-footer">
+            <!-- <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button> -->
+            <a id="gameModalBtn" type="button" role="button" class="btn btn-primary">OK</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h3 id="player-turn">No opponent</h3>
+        </div>
+        <div class="col">
+          <h3 id="game-status">No game</h3>
+        </div>
+      </div>
+    </div>
+   
+    <div class="container">
+      <div class="d-flex flex-row gap-5">
+        <div>
+          <div class="card" style="width: 18rem">
+            <img src="/img/user.jpeg" width="100px" height="250px" class="card-img-top" />
+            <div class="card-body">
+              <h5 class="card-title"><%= username %></h5>
+              <p class="card-text">      
+                <p id="conn-status">No connection</p>
+                <strong>Remaining coins: </strong><p id="my-remaining-coins">42</p>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div id="grid">
+            <table>
+              <!-- Board rows -->
+              <tr>
+                <!-- Board columns -->
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+
+              <tr>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+                <td class="cell"></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" style="width: 18rem">
+            <img src="/img/user.jpeg" width="100px" height="250px" class="card-img-top" />
+            <div class="card-body">
+              <h5 id="opponent-name" class="card-title">No opponent</h5>
+              <strong>Remaining coins: </strong><p id="opponent-remaining-coins">42</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label>Username:</label>
+      <input id="player-name" value="<%= username %>" />
+      <button id="join">Join</button>
+    </div>
+  </body>
+</html>

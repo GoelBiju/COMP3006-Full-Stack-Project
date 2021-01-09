@@ -22,6 +22,22 @@ const GameSchema = mongoose.Schema({
     type: Number,
     default: -1,
   },
+  state: {
+    type: Number,
+    default: -1,
+  },
+  winner: {
+    type: String,
+    default: "",
+  },
+  scoreOne: {
+    type: Number,
+    default: 0,
+  },
+  scoreTwo: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("Game", GameSchema);

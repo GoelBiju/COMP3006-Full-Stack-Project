@@ -1,20 +1,23 @@
 let path = require("path");
 
 function homeRoute(req, res) {
-  res.render("pages/home");
+  res.render("home");
 }
 
 function gameRoute(req, res) {
-  res.sendFile(path.join(__dirname, "views/index.html"));
-  // res.render("game", { gameId: req.params.game });
+  // TODO: Check if the game exists
+
+  // Get the logged in username
+  const { username } = req.user;
+  res.render("game", { username, gameId: req.params.gameId });
 }
 
 function loginRoute(req, res) {
-  res.render("pages/login");
+  res.render("login");
 }
 
 function registerRoute(req, res) {
-  res.render("pages/register");
+  res.render("register");
 }
 
 module.exports = {

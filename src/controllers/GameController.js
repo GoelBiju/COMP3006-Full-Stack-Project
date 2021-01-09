@@ -114,13 +114,61 @@ const switchMove = async (gameId, currentPlayer) => {
   return nextPlayer;
 };
 
+// Update the state for a game
+const updateState = async (gameId, state) => {
+  let updated = false;
+
+  await getGame(gameId).then(async (game) => {
+    if (game) {
+      game.state = state;
+      await game.save();
+
+      updated = true;
+    }
+  });
+
+  return updated;
+};
+
+// Update the winner for a game
+const updateWinner = async (gameId, username) => {
+  let updated = false;
+
+  await getGame(gameId).then(async (game) => {
+    if (game) {
+      game.winner = username;
+      await game.save();
+
+      updated = true;
+    }
+  });
+
+  return updated;
+};
+
+// Get the player score
+const getPlayerScores = async (gameId) => {
+  let scores = [-1, -1];
+
+  await getGame(gameId).then(async (game) => {
+    if (game) {
+      scores = [game.scoreOne, game.scoreTwo];
+    }
+  });
+
+  return scores;
+};
+
 module.exports = {
   getGame,
   getGamePlayerCount,
   getGamePlayers,
   getGamePlayer,
   getRandomPlayer,
+  getPlayerScores,
   addGamePlayer,
+  updateState,
+  updateWinner,
   updateNextMove,
   switchMove,
 };

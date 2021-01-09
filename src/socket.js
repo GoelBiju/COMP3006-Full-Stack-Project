@@ -5,8 +5,12 @@ const {
   getGamePlayers,
   switchMove,
   updateNextMove,
+  updateState,
+  getPlayerScores,
+  updateWinner,
+  getGamePlayer,
 } = require("./controllers/GameController");
-const { makeMove } = require("./logic");
+const { makeMove, performChecks } = require("./logic");
 
 // TODO: Implement rooms based on game
 const gameId = "1";
@@ -16,11 +20,25 @@ function handleConnection(socket) {
   // Emit a connection success to client
   socket.emit("connection", "success");
 
-  // Handle Join events.
-  socket.on("join", (userInfo) => handleJoin(socket, userInfo));
+  // Handle game events.
+  socket.on("game", (gameData) => handleGame(socket, gameData));
+}
 
-  // Handle Move events.
-  socket.on("move", (moveInfo) => handleMove(socket, moveInfo));
+// Handles all game related events.
+function handleGame(socket, gameData) {
+  console.log("Game data: ", gameData);
+
+  // Get game action and data.
+  const { action, data } = gameData;
+  switch (action) {
+    case "join":
+      handleJoin(socket, data);
+      break;
+
+    case "move":
+      handleMove(socket, data);
+      break;
+  }
 }
 
 async function handleJoin(socket, username) {
@@ -30,11 +48,12 @@ async function handleJoin(socket, username) {
   const res = await addGamePlayer(gameId, username);
   console.log("Add result: ", res);
   if (res) {
-    console.log("Added game player: ", username);
+    // Add the player to game.
+    socket.join(gameId);
+    console.log(`Added player (${username}) to game ${gameId}`);
 
     const count = await getGamePlayerCount(gameId);
     console.log("Game count: ", count);
-
     if (count == 2) {
       console.log("Game now full");
       // Choose a random player to start
@@ -50,7 +69,7 @@ async function handleJoin(socket, username) {
         console.log("Game players: ", gamePlayers);
 
         // Send to other player
-        socket.broadcast.emit("game", {
+        socket.to(gameId).emit("game", {
           status: "start",
           opponent: username,
           id: gamePlayers.findIndex((player) => player != username),
@@ -69,7 +88,9 @@ async function handleJoin(socket, username) {
         });
         console.log("Sent game start, start player: ", nextMove);
       } else {
-        socket.emit("game", { status: "error" });
+        socket.emit("game", {
+          status: "error, unable to initialise game (server)",
+        });
         console.log("Could not initialise next move to: ", nextMove);
       }
     } else {
@@ -78,7 +99,7 @@ async function handleJoin(socket, username) {
     }
   } else {
     // Reject if already full
-    socket.emit("reject", "Game full, try again later");
+    socket.emit("reject", "Game unavailable or full");
     console.log(`Connection from ${username} rejected, game full`);
   }
 }
@@ -93,28 +114,98 @@ async function handleMove(socket, moveInfo) {
   const row = await makeMove(gameId, id, column);
   console.log("Moved row: ", row);
   if (row != -1) {
-    // Update next player
-    const nextMove = await switchMove(gameId, id);
-    if (nextMove != -1) {
-      let moveInfo = {
-        confirm: true,
-        row,
-        column,
-        // TODO: colour should be associated to players
-        colour: id == 0 ? "red" : "yellow",
-        // Return next move
-        nextMove,
-      };
+    // Check current state of the board
+    const state = await performChecks(gameId);
 
-      // Send move to other player
-      socket.broadcast.emit("move", moveInfo);
+    // Update the current game state.
+    const updated = await updateState(gameId, state);
+    if (state != -1 && updated) {
+      console.log("Current game state updated: ", state, updated);
 
-      // Send back a confirmation to change client board
-      socket.emit("move", moveInfo);
+      // Get the current players score.
+      const playerScores = await getPlayerScores(gameId);
+      console.log("Current player scores: ", playerScores);
+      if (playerScores[0] != -1 && playerScores[1] != -1) {
+        // Generate move info to send back to client
+        let info = {
+          confirm: true,
+          state,
+          row,
+          column,
+          // TODO: colour should be associated to players
+          colour: id == 0 ? "red" : "yellow",
+          // Return both player scores
+          playerScores,
+        };
+
+        // Check if states match a win
+        if ([1, 2, 3].includes(state)) {
+          // get the username of the winning player
+          const username = await getGamePlayer(gameId, id);
+          console.log(`Win ${state} for ${username} (${id})`);
+
+          // Update winner in game.
+          const updated = await updateWinner(gameId, username);
+          if (updated) {
+            // Send win/lost results to both clients
+            socket.to(gameId).emit("move", {
+              ...info,
+              lost: true,
+            });
+
+            socket.emit("move", {
+              ...info,
+              win: true,
+            });
+          } else {
+            socket.emit("move", {
+              confirm: false,
+              reason: "Issue updating winner of game (server)",
+            });
+          }
+        } else if (state == 4) {
+          // Send draw result to both players
+          socket.to(gameId).emit("move", {
+            ...info,
+            result: -1,
+          });
+
+          socket.emit("move", {
+            ...info,
+            result: -1,
+          });
+        } else {
+          // Update next player
+          const nextMove = await switchMove(gameId, id);
+          if (nextMove != -1) {
+            let moveInfo = {
+              ...info,
+
+              // Return next move
+              nextMove,
+            };
+            // Send move to other player
+            socket.to(gameId).emit("move", moveInfo);
+
+            // Send back a confirmation to change client board
+            socket.emit("move", moveInfo);
+          } else {
+            socket.emit("move", {
+              confirm: false,
+              reason: "Issue switching player (server)",
+            });
+          }
+        }
+      } else {
+        socket.emit("move", {
+          confirm: false,
+          reason: "Unable to set player scores (server)",
+        });
+      }
     } else {
       socket.emit("move", {
-        confirm: "false",
-        reason: "Issue switching player",
+        confirm: false,
+        reason: "Unable to get new game state or update it (server)",
       });
     }
   } else {

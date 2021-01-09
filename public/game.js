@@ -1,6 +1,9 @@
 $(function () {
   // Create socket
-  var socket = io();
+  let socket = io();
+
+  // Get gameId
+  console.log("Game ID: ", gameId);
 
   // Game settings
   let gameJoined = false;
@@ -8,15 +11,33 @@ $(function () {
 
   // Get table rows
   let tableRows = $("tr");
+  // console.log("Got table rows: ", tableRows);
 
   // Get cells and slots
   let tableCells = $("td");
-  // let tableSlots = $(".slot");
+  // console.log("Got table cells: ", tableCells);
 
   // Player information
   let gamePlayers = [];
   let myId = -1;
   let currentPlayer = -1;
+
+  // Helper to set the modal with information
+  function showGameModal(message, redirect = "") {
+    // Set the body with the message
+    $("#gameModalBody").html(message);
+
+    if (!redirect) {
+      $("#gameModalBtn").click(function () {
+        $("#gameModal").modal("hide");
+      });
+    } else {
+      $("#gameModalBtn").attr("href", redirect);
+    }
+
+    // Show the modal
+    $("#gameModal").modal("show");
+  }
 
   // Get next move
   const getPlayerTurn = () => gamePlayers[currentPlayer];
@@ -34,6 +55,18 @@ $(function () {
     }
   };
 
+  // Emit game action and data
+  function emitGameAction(action, data) {
+    socket.emit("game", {
+      gameId,
+      action,
+      data,
+    });
+
+    console.log(`Sent game action (${action}): ${data}`);
+  }
+
+  // TODO: When document is ready perform a join on the room.
   // Join a game
   $("#join").click(function () {
     // Reset other fields
@@ -47,8 +80,7 @@ $(function () {
     $("#player-turn").text("");
 
     // Send some user info
-    socket.emit("join", getUsername());
-    console.log("Sent join");
+    emitGameAction("join", getUsername());
   });
 
   // Connection message from server
@@ -86,10 +118,14 @@ $(function () {
   // When receiving reject message
   socket.on("reject", function (msg) {
     console.log("Rejected game: ", msg);
-    $("#game-status").text(msg);
+
+    // Redirect back to home
+    showGameModal(msg, "/");
   });
 
+  // Handle response to a move.
   socket.on("move", function (moveInfo) {
+    const { playerScores } = moveInfo;
     console.log("Move response: ", moveInfo);
 
     // Check if the move was made
@@ -108,6 +144,12 @@ $(function () {
         moveInfo.colour
       );
 
+      // Update player scores
+      $("#my-remaining-coins").text(42 - playerScores[myId]);
+      $("#opponent-remaining-coins").text(
+        42 - playerScores.find((id) => id != myId)
+      );
+
       // Update next move
       currentPlayer = moveInfo.nextMove;
       $("#player-turn").text(`Player Turn: ${getPlayerTurn()}`);
@@ -118,7 +160,7 @@ $(function () {
 
   // Add event listener to each table cell to
   // find row and column location of cell
-  $("td").click(function (e) {
+  $(".cell").click(function (e) {
     console.log(
       "Row, Column of clicked: ",
       `${e.target.parentElement.rowIndex}, ${e.target.cellIndex}`
@@ -128,7 +170,11 @@ $(function () {
   function handleMove(event) {
     if (gameJoined && myTurn()) {
       // Send a message to the server to move this piece.
-      socket.emit("move", {
+      // socket.emit("move", {
+      //   id: myId,
+      //   column: event.target.cellIndex,
+      // });
+      emitGameAction("move", {
         id: myId,
         column: event.target.cellIndex,
       });

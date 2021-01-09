@@ -51,6 +51,10 @@ db.once("open", async () => {
         [-1, -1, -1, -1, -1, -1, -1],
       ];
       game.nextMove = -1;
+      game.state = 0;
+      game.scoreOne = 0;
+      game.scoreTwo = 0;
+      game.winner = "";
 
       game.save();
       console.log("Reset test values.");
@@ -89,7 +93,7 @@ app.set("views", path.join(__dirname, "/src/views"));
 
 // Define page routes.
 app.get("/", authenticate, routes.homeRoute);
-app.get("/game", authenticate, routes.gameRoute);
+app.get("/game/:gameId", authenticate, routes.gameRoute);
 app.get("/login", routes.loginRoute);
 app.get("/register", routes.registerRoute);
 

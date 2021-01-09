@@ -13,13 +13,13 @@ const {
   getGamePlayers,
 } = require("../../src/controllers/GameController");
 
+// Start test database
+connectTestDb();
+
 suite("Game - Controller/Model", () => {
   let gameData;
 
   suiteSetup(async () => {
-    // Start test database
-    await connectTestDb();
-
     // Create expected game data
     gameData = {
       _id: 1,
@@ -164,6 +164,12 @@ suite("Game - Controller/Model", () => {
     nextPlayer = await switchMove("1", 1);
     chai.assert.equal(nextPlayer, 0, "Next move not updated to 0");
   });
+
+  test.skip("it updates the state of a game");
+
+  test.skip("it updates the winner of a game");
+
+  test.skip("it gets the players scores from a game");
 
   suiteTeardown(async () => {
     await disconnectTestDb();
