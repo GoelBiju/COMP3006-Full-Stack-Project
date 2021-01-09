@@ -1,25 +1,7 @@
-/* * {
+body {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-} */
-
-/* #connection-details {
-  text-align: center;
-} */
-
-/* div#game {
-  position: absolute;
-  top: 10rem;
-  left: 50%;
-  transform: translate(-50%);
-  width: 650px;
-  height: 600px;
-  background: rgb(61, 138, 254);
-  border: 1px solid black;
-  box-shadow: 5px 5px rgba(0, 0, 0, 0.5);
-  padding: 1.5rem;
-} */
+  overflow: hidden;
+}
 
 div#grid {
   /* Center grid (without flexbox) */
@@ -44,14 +26,6 @@ div#grid {
   border-spacing: 5px 5px;
 }
 
-/* .mytable td {
-  width: 90px;
-  height: 90px;
-  background: white;
-  border: 1px solid black;
-  border-radius: 50%;
-} */
-
 #grid td.cell {
   /* Color */
   background-color: #ffffff;
@@ -65,4 +39,24 @@ div#grid {
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
+}
+
+.wrapper {
+  position: relative;
+}
+
+[class|="confetti"] {
+  position: absolute;
+}
+
+.redConfetti {
+  background-color: #d13447;
+}
+
+.blueConfetti {
+  background-color: #263672;
+}
+
+.yellowConfetti {
+  background-color: #ffbf00;
 }

@@ -71,6 +71,73 @@ $(function () {
     $("#gameModal").modal("show");
   }
 
+  // Set opacity when showing game modal
+  $("#gameModal").on("shown.bs.modal", function (e) {
+    $("div.modal-backdrop").css("opacity", 0.25);
+  });
+
+  function createConfetti(i) {
+    var width = Math.random() * 8;
+    var height = width * 0.4;
+    var colourIdx = Math.ceil(Math.random() * 3);
+    var colour = "red";
+
+    switch (colourIdx) {
+      case 1:
+        colour = "yellow";
+        break;
+
+      case 2:
+        colour = "blue";
+        break;
+
+      default:
+        colour = "red";
+    }
+
+    // Add the confetti to the wrapper
+    $(`<div class="confetti-${i} ${colour}Confetti"></div>`)
+      .css({
+        width: `${width}px`,
+        height: `${height}px`,
+        top: `${-Math.random() * 20}%`,
+        left: `${Math.random() * 100}%`,
+        opacity: Math.random() + 0.5,
+        transform: `rotate(${Math.random() * 360}deg)`,
+      })
+      .appendTo(".wrapper");
+
+    dropConfetti(i);
+  }
+
+  function resetConfetti(x) {
+    $(`.confetti-${x}`).animate(
+      {
+        top: `${-Math.random() * 20}%`,
+        left: `-=${Math.random() * 15}%`,
+      },
+      0,
+      function () {
+        dropConfetti(x);
+      }
+    );
+  }
+
+  function dropConfetti(x) {
+    $(`.confetti-${x}`).animate(
+      {
+        top: "100%",
+        left: `+=${Math.random() * 15}%`,
+      },
+      Math.random() * 2000 + 2000,
+      function () {
+        resetConfetti(x);
+      }
+    );
+  }
+
+  // showResultModal(10, 10, "You Win", "green");
+
   // Get next move
   const getPlayerTurn = () => gamePlayers[currentPlayer];
 
@@ -184,6 +251,13 @@ $(function () {
 
       // Check if we received a win, lost or draw result.
       if (moveInfo.win) {
+        $(".wrapper").css("min-height", "100vh");
+
+        // Create confetti for win
+        for (let i = 0; i < 150; i++) {
+          createConfetti(i);
+        }
+
         showResultModal(playerScores[0], playerScores[1], "You Win", "green");
       } else if (moveInfo.lost) {
         showResultModal(playerScores[0], playerScores[1], "You Lost", "red");
