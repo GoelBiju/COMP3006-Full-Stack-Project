@@ -10,18 +10,22 @@ $(function () {
         $("#login-alert").addClass("close");
         console.log(response);
         if (status == "success") {
-          if (response.login && response.login) {
+          if (response.login) {
             let message = `${response.message}, re-directing...`;
-            $("#register-alert").html(message);
-            $("#register-alert").addClass("alert-success");
-            $("#register-alert").addClass("show");
+            $("#login-alert").html(message);
+            $("#login-alert").removeClass("alert-danger");
+            $("#login-alert").addClass("alert-success");
+            $("#login-alert").addClass("show");
 
             console.log("Login response: ", response);
-            window.location = response.redirectUrl;
+            setTimeout(() => {
+              window.location = response.redirectUrl;
+            }, 1000);
           } else {
-            $("#register-alert").html(response.message);
-            $("#register-alert").addClass("alert-danger");
-            $("#register-alert").addClass("show");
+            $("#login-alert").html(`Login error: ${response.message}`);
+            $("#login-alert").removeClass("alert-success");
+            $("#login-alert").addClass("alert-danger");
+            $("#login-alert").addClass("show");
           }
         }
       }
@@ -43,16 +47,16 @@ $(function () {
         console.log(response);
         if (status == "success") {
           if (response.registered) {
-            $("#register-alert").addClass("alert-success");
-
             let message = `${response.message}, go back to <a href="/login">login page</a>.`;
             $("#register-alert").html(message);
+            $("#register-alert").removeClass("alert-danger");
+            $("#register-alert").addClass("alert-success");
             $("#register-alert").addClass("show");
           } else {
-            $("#register-alert").addClass("alert-danger");
-
             let message = response.message;
             $("#register-alert").html(message);
+            $("#register-alert").removeClass("alert-success");
+            $("#register-alert").addClass("alert-danger");
             $("#register-alert").addClass("show");
           }
         }
