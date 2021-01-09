@@ -36,6 +36,15 @@ async function makeMove(gameId, player, column) {
       game.board = board;
       game.markModified("board");
 
+      // Update player score
+      if (player == 0) {
+        game.scoreOne += 1;
+        console.log("Updated player 1 score: ", game.scoreOne);
+      } else if (player == 1) {
+        game.scoreTwo += 1;
+        console.log("Updated player 2 score: ", game.scoreTwo);
+      }
+
       await game.save();
       console.log("Updated board: ", game.board);
     }

@@ -146,7 +146,18 @@ const updateWinner = async (gameId, username) => {
   return updated;
 };
 
-// const updatePlayerScore = async(gameId);
+// Get the player score
+const getPlayerScores = async (gameId) => {
+  let scores = [-1, -1];
+
+  await getGame(gameId).then(async (game) => {
+    if (game) {
+      scores = [game.scoreOne, game.scoreTwo];
+    }
+  });
+
+  return scores;
+};
 
 module.exports = {
   getGame,
@@ -154,9 +165,10 @@ module.exports = {
   getGamePlayers,
   getGamePlayer,
   getRandomPlayer,
+  getPlayerScores,
   addGamePlayer,
-  updateNextMove,
-  switchMove,
   updateState,
   updateWinner,
+  updateNextMove,
+  switchMove,
 };
