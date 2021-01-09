@@ -123,7 +123,9 @@ $(function () {
     showGameModal(msg, "/");
   });
 
+  // Handle response to a move.
   socket.on("move", function (moveInfo) {
+    const { playerScores } = moveInfo;
     console.log("Move response: ", moveInfo);
 
     // Check if the move was made
@@ -140,6 +142,12 @@ $(function () {
       $(tableRows.eq(moveInfo.row).children().eq(moveInfo.column)).css(
         "backgroundColor",
         moveInfo.colour
+      );
+
+      // Update player scores
+      $("#my-remaining-coins").text(42 - playerScores[myId]);
+      $("#opponent-remaining-coins").text(
+        42 - playerScores.find((id) => id != myId)
       );
 
       // Update next move
