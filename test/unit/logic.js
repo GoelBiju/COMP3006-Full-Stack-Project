@@ -30,6 +30,8 @@ suite("Logic", () => {
     ];
   });
 
+  test.skip("it can make a move on the board");
+
   test("coin match check", () => {
     let result;
 
