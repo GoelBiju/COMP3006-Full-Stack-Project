@@ -47,7 +47,19 @@
           <div class="modal-header">
             <h5 class="modal-title" id="gameModalLabel">Connect4</h5>
           </div>
-          <div id="gameModalBody" class="modal-body"></div>
+          <div id="gameModalBody" class="modal-body">
+            <strong><p id="modalBodyTitle"></p></strong>
+            <p id="modalBodyMessage"></p>
+            <div id="modalPlayers" class="row justify-content-between">
+              <div id="modalPlayerOne" class="col-4"></div>
+              <div id="modalPlayerTwo" class="col-4"></div>
+            </div>
+            <div id="modalScores" class="row">
+              <div id="modalScoreOne" class="col"></div>
+              <div id="modalScoreDash" class="col"></div>
+              <div id="modalScoreTwo" class="col"></div>
+            </div>
+          </div>
           <div class="modal-footer">
             <!-- <button
               type="button"
