@@ -25,7 +25,7 @@ $(function () {
   // Helper to set the modal with information
   function showGameModal(message, redirect = "") {
     // Set the body with the message
-    $("#gameModalBody").html(message);
+    $("#modalBodyMessage").html(message);
 
     if (!redirect) {
       $("#gameModalBtn").click(function () {
@@ -38,6 +38,105 @@ $(function () {
     // Show the modal
     $("#gameModal").modal("show");
   }
+
+  function showResultModal(scoreOne, scoreTwo, title, colour = "black") {
+    // Set the body with the message
+    $("#modalBodyTitle").html(title);
+    $("#modalBodyTitle").css("color", colour);
+    $("#modalBodyTitle").css("font-size", "30px");
+    $("#modalBodyTitle").css("text-align", "center");
+
+    // Set the player names
+    $("#modalPlayers").css("text-align", "center");
+    $("#modalPlayerOne").text("goel");
+    $("#modalPlayerOne").css("font-size", "20px");
+    $("#modalPlayerOne").css("color", "grey");
+    $("#modalPlayerTwo").text("tom");
+    $("#modalPlayerTwo").css("font-size", "20px");
+    $("#modalPlayerTwo").css("color", "grey");
+
+    // Set the scores
+    $("#modalScores").css("text-align", "center");
+    $("#modalScoreOne").text(scoreOne);
+    $("#modalScoreOne").css("font-size", "25px");
+    $("#modalScoreTwo").text(scoreTwo);
+    $("#modalScoreTwo").css("font-size", "25px");
+
+    $("#modalScoreDash").text("-");
+    $("#modalScoreDash").css("font-size", "25px");
+
+    $("#gameModalBtn").attr("href", "/");
+
+    // Show the modal
+    $("#gameModal").modal("show");
+  }
+
+  // Set opacity when showing game modal
+  $("#gameModal").on("shown.bs.modal", function (e) {
+    $("div.modal-backdrop").css("opacity", 0.25);
+  });
+
+  function createConfetti(i) {
+    var width = Math.random() * 8;
+    var height = width * 0.4;
+    var colourIdx = Math.ceil(Math.random() * 3);
+    var colour = "red";
+
+    switch (colourIdx) {
+      case 1:
+        colour = "yellow";
+        break;
+
+      case 2:
+        colour = "blue";
+        break;
+
+      default:
+        colour = "red";
+    }
+
+    // Add the confetti to the wrapper
+    $(`<div class="confetti-${i} ${colour}Confetti"></div>`)
+      .css({
+        width: `${width}px`,
+        height: `${height}px`,
+        top: `${-Math.random() * 20}%`,
+        left: `${Math.random() * 100}%`,
+        opacity: Math.random() + 0.5,
+        transform: `rotate(${Math.random() * 360}deg)`,
+      })
+      .appendTo(".wrapper");
+
+    dropConfetti(i);
+  }
+
+  function resetConfetti(x) {
+    $(`.confetti-${x}`).animate(
+      {
+        top: `${-Math.random() * 20}%`,
+        left: `-=${Math.random() * 15}%`,
+      },
+      0,
+      function () {
+        dropConfetti(x);
+      }
+    );
+  }
+
+  function dropConfetti(x) {
+    $(`.confetti-${x}`).animate(
+      {
+        top: "100%",
+        left: `+=${Math.random() * 15}%`,
+      },
+      Math.random() * 2000 + 2000,
+      function () {
+        resetConfetti(x);
+      }
+    );
+  }
+
+  // showResultModal(10, 10, "You Win", "green");
 
   // Get next move
   const getPlayerTurn = () => gamePlayers[currentPlayer];
@@ -134,7 +233,7 @@ $(function () {
         `Move confirmed: ${moveInfo.row} (row), ${moveInfo.column} (column) (colour: ${moveInfo.colour})`
       );
 
-      // Change the colour of the cell.
+      // Change the colour of the cell
       console.log(
         "Got table row: ",
         tableRows.eq(moveInfo.row).children().eq(moveInfo.column)
@@ -150,11 +249,28 @@ $(function () {
         42 - playerScores.find((id) => id != myId)
       );
 
-      // Update next move
-      currentPlayer = moveInfo.nextMove;
-      $("#player-turn").text(`Player Turn: ${getPlayerTurn()}`);
+      // Check if we received a win, lost or draw result.
+      if (moveInfo.win) {
+        $(".wrapper").css("min-height", "100vh");
+
+        // Create confetti for win
+        for (let i = 0; i < 150; i++) {
+          createConfetti(i);
+        }
+
+        showResultModal(playerScores[0], playerScores[1], "You Win", "green");
+      } else if (moveInfo.lost) {
+        showResultModal(playerScores[0], playerScores[1], "You Lost", "red");
+      } else if (moveInfo.result) {
+        showResultModal(playerScores[0], playerScores[1], "Draw");
+      } else {
+        // Update next move
+        currentPlayer = moveInfo.nextMove;
+        $("#player-turn").text(`Player Turn: ${getPlayerTurn()}`);
+      }
     } else {
       console.log("Unable to move: ", moveInfo.reason);
+      showGameModal(`Error: ${moveInfo.reason}`);
     }
   });
 

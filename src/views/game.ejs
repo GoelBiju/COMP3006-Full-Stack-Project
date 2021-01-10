@@ -32,37 +32,50 @@
     </nav>
   </header>
 
-      <!-- Game modal -->
-      <div
-      class="modal fade"
-      id="gameModal"
-      data-bs-backdrop="static"
-      data-bs-keyboard="false"
-      tabindex="-1"
-      aria-labelledby="gameModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="gameModalLabel">Connect4</h5>
+  <!-- Game modal -->
+  <div
+    class="modal fade"
+    id="gameModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-labelledby="gameModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gameModalLabel">Connect4</h5>
+        </div>
+        <div id="gameModalBody" class="modal-body">
+          <strong><p id="modalBodyTitle"></p></strong>
+          <p id="modalBodyMessage"></p>
+          <div id="modalPlayers" class="row justify-content-between">
+            <div id="modalPlayerOne" class="col-4"></div>
+            <div id="modalPlayerTwo" class="col-4"></div>
           </div>
-          <div id="gameModalBody" class="modal-body"></div>
-          <div class="modal-footer">
-            <!-- <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button> -->
-            <a id="gameModalBtn" type="button" role="button" class="btn btn-primary">OK</a>
+          <div id="modalScores" class="row">
+            <div id="modalScoreOne" class="col"></div>
+            <div id="modalScoreDash" class="col"></div>
+            <div id="modalScoreTwo" class="col"></div>
           </div>
+        </div>
+        <div class="modal-footer">
+          <!-- <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button> -->
+          <a id="gameModalBtn" type="button" role="button" class="btn btn-primary">OK</a>
         </div>
       </div>
     </div>
+  </div>
 
   <body>
+    <div class="wrapper"></div>
     <div class="container">
       <div class="row">
         <div class="col">
@@ -82,7 +95,7 @@
             <div class="card-body">
               <h5 class="card-title"><%= username %></h5>
               <p class="card-text">      
-                <p id="conn-status">No connection</p>
+                <!-- <p id="conn-status">No connection</p> -->
                 <strong>Remaining coins: </strong><p id="my-remaining-coins">42</p>
               </p>
             </div>

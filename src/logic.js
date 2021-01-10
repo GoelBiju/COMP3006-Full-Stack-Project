@@ -10,8 +10,8 @@ async function makeMove(gameId, player, column) {
 
   // Get the game.
   await getGame(gameId).then(async (game) => {
-    // Check for next move
-    if (game && game.nextMove == player) {
+    // Check for next move, make sure the game is in a state to move
+    if (game && game.state == 0 && game.nextMove == player) {
       let board = game.board;
       console.log("Board length: ", game.board.length);
 
