@@ -13,7 +13,7 @@ const {
 const { makeMove, performChecks } = require("./logic");
 
 // TODO: Implement rooms based on game
-const gameId = "1";
+// const gameId = "1";
 
 // Handle socket events.
 function handleConnection(socket) {
@@ -41,7 +41,9 @@ function handleGame(socket, gameData) {
   }
 }
 
+// Handle a join request to a game with the game ID and username
 async function handleJoin(socket, username) {
+  // TODO: get the gameId
   console.log("User join request: ", username);
 
   // Add the user to the game.
@@ -56,42 +58,51 @@ async function handleJoin(socket, username) {
     console.log("Game count: ", count);
     if (count == 2) {
       console.log("Game now full");
-      // Choose a random player to start
-      nextMove = await getRandomPlayer(gameId);
 
-      // Update next move
-      const updated = await updateNextMove(gameId, nextMove);
+      // Set the game state to 0
+      const updated = await updateState(gameId, 0);
       if (updated) {
-        console.log("Updated next move to: ", nextMove);
+        // Choose a random player to start
+        const nextMove = await getRandomPlayer(gameId);
 
-        // Get all the players in this game.
-        let gamePlayers = await getGamePlayers(gameId);
-        console.log("Game players: ", gamePlayers);
+        // Update next move
+        const updated = await updateNextMove(gameId, nextMove);
+        if (updated) {
+          console.log("Updated next move to: ", nextMove);
 
-        // Send to other player
-        socket.to(gameId).emit("game", {
-          status: "start",
-          opponent: username,
-          id: gamePlayers.findIndex((player) => player != username),
-          gamePlayers,
-          nextMove,
-        });
+          // Get all the players in this game.
+          let gamePlayers = await getGamePlayers(gameId);
+          console.log("Game players: ", gamePlayers);
 
-        // Send back to client
-        socket.emit("game", {
-          status: "start",
-          // Find the other players username
-          opponent: gamePlayers.find((player) => player != username),
-          id: gamePlayers.findIndex((player) => player == username),
-          gamePlayers,
-          nextMove,
-        });
-        console.log("Sent game start, start player: ", nextMove);
+          // Send to other player
+          socket.to(gameId).emit("game", {
+            status: "start",
+            opponent: username,
+            id: gamePlayers.findIndex((player) => player != username),
+            gamePlayers,
+            nextMove,
+          });
+
+          // Send back to client
+          socket.emit("game", {
+            status: "start",
+            // Find the other players username
+            opponent: gamePlayers.find((player) => player != username),
+            id: gamePlayers.findIndex((player) => player == username),
+            gamePlayers,
+            nextMove,
+          });
+          console.log("Sent game start, start player: ", nextMove);
+        } else {
+          socket.emit("game", {
+            status: "error, unable to initialise game (server)",
+          });
+          console.log("Could not initialise next move to: ", nextMove);
+        }
       } else {
         socket.emit("game", {
-          status: "error, unable to initialise game (server)",
+          status: "error, unable to set initial game state (server)",
         });
-        console.log("Could not initialise next move to: ", nextMove);
       }
     } else {
       socket.emit("game", { status: "wait" });

@@ -1,7 +1,8 @@
 let path = require("path");
 
 function homeRoute(req, res) {
-  res.render("home");
+  const { username } = req.user;
+  res.render("home", { username });
 }
 
 function gameRoute(req, res) {

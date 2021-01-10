@@ -12,11 +12,11 @@ const cookieParser = require("cookie-parser");
 let routes = require("./src/routes");
 let socketHandle = require("./src/socket");
 
-const authRoute = require("./src/apiRoutes/auth");
+const authApiRoute = require("./src/apiRoutes/auth");
+const gameApiRoute = require("./src/apiRoutes/game");
 const authenticate = require("./src/middleware/authenticate");
 
-// TODO: Needs to be removed once tested
-const Game = require("./src/models/Game");
+const { createGame } = require("./src/controllers/GameController");
 
 // Database connection using Heroku or localhost
 let mongoDBUrl =
@@ -39,33 +39,35 @@ db.once("open", async () => {
   console.log("Connected to database.");
 
   // Create a single game.
-  await Game.findById("1", async function (err, game) {
-    if (game) {
-      game.players = [];
-      game.board = [
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1],
-      ];
-      game.nextMove = -1;
-      game.state = 0;
-      game.scoreOne = 0;
-      game.scoreTwo = 0;
-      game.winner = "";
+  // await Game.findById("1", async function (err, game) {
+  //   if (game) {
+  //     game.players = [];
+  //     game.board = [
+  //       [-1, -1, -1, -1, -1, -1, -1],
+  //       [-1, -1, -1, -1, -1, -1, -1],
+  //       [-1, -1, -1, -1, -1, -1, -1],
+  //       [-1, -1, -1, -1, -1, -1, -1],
+  //       [-1, -1, -1, -1, -1, -1, -1],
+  //       [-1, -1, -1, -1, -1, -1, -1],
+  //     ];
+  //     game.nextMove = -1;
+  //     game.state = 0;
+  //     game.scoreOne = 0;
+  //     game.scoreTwo = 0;
+  //     game.winner = "";
 
-      game.save();
-      console.log("Reset test values.");
-    } else {
-      console.log("No game with ID: 1");
+  //     game.save();
+  //     console.log("Reset test values.");
+  //   } else {
+  //     console.log("No game with ID: 1");
 
-      const g = await Game.create({ _id: "1" });
-      await g.save();
-      console.log("New game with ID: ", g._id);
-    }
-  });
+  //     // const g = await Game.create({ _id: "1" });
+  //     // await g.save();
+
+  //     console.log("New game with ID: ", game._id);
+  //   }
+  // });
+  // createGame();
 
   // Set mongoose debugging information to show in console
   mongoose.set("debug", true);
@@ -98,7 +100,8 @@ app.get("/login", routes.loginRoute);
 app.get("/register", routes.registerRoute);
 
 // Define API routes.
-app.use("/api", authRoute);
+app.use("/api", authApiRoute);
+app.use("/api", gameApiRoute);
 
 // Handle websocket connections.
 io.on("connection", socketHandle.handleConnection);
