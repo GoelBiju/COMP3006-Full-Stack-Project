@@ -65,6 +65,7 @@ $(function () {
     $("#modalScoreDash").text("-");
     $("#modalScoreDash").css("font-size", "25px");
 
+    $("#gameModalBtn").text("Home");
     $("#gameModalBtn").attr("href", "/");
 
     // Show the modal
