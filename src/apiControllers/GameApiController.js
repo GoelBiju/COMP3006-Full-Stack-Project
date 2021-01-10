@@ -8,8 +8,10 @@ const create = (req, res, next) => {
     .then((created) => {
       console.log("Created game: ", created);
 
-      // Redirect to the created game
-      res.redirect(`/game/${created._id}`);
+      // Return redirect url
+      res.json({
+        redirectUrl: `/game/${created._id}`,
+      });
     })
     .catch((error) => {
       res.json({

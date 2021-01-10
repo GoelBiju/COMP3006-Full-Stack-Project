@@ -10,6 +10,9 @@
       }
     </style>
 
+    <!-- Home JS -->
+    <script src="/home.js" defer></script>
+
     <title>Connect4 - Home</title>
   </head>
   <header>
@@ -28,11 +31,12 @@
       </div>
       <div class="row">
         <div class="d-flex justify-content-center">
-          <button class="btn btn-primary btn-lg" type="button">
+          <button id="createGameBtn" class="btn btn-primary btn-lg" type="button">
             Create Game
           </button>
         </div>
 
+        <!-- Table of user's game history -->
         <div class="col">
           <div class="card">
             <div class="card-body">
@@ -40,7 +44,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">#ID</th>
+                    <!-- <th scope="col">#ID</th> -->
                     <th scope="col">Date</th>
                     <th scope="col">Opponent</th>
                     <th scope="col">Score</th>
@@ -50,8 +54,8 @@
                 <tbody>
                   <!-- Win -->
                   <tr>
-                    <th scope="row">1234</th>
-                    <td>2020-09-01</td>
+                    <!-- <th scope="row">1234</th> -->
+                    <th scope="row">2020-09-01</td>
                     <td>test</td>
                     <td class="table-success">4-0</td>
                     <td>goel</td>
@@ -59,8 +63,8 @@
 
                   <!-- Draw -->
                   <tr>
-                    <th scope="row">1321</th>
-                    <td>2020-09-02</td>
+                    <!-- <th scope="row">1321</th> -->
+                    <th scope="row">2020-09-02</td>
                     <td>tom</td>
                     <td class="table-warning">0-0</td>
                     <td>goel</td>
@@ -68,8 +72,8 @@
 
                   <!-- Loss -->
                   <tr>
-                    <th scope="row">1254</th>
-                    <td>2020-09-03</td>
+                    <!-- <th scope="row">1254</th> -->
+                    <th scope="row">2020-09-03</td>
                     <td>john</td>
                     <td class="table-danger">4-8</td>
                     <td>john</td>
@@ -79,6 +83,7 @@
             </div>
           </div>
         </div>
+
         <div class="col">
           <div class="card">
             <div class="card-body">
