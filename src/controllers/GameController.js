@@ -6,10 +6,28 @@ const getGame = async (id) => {
   return game;
 };
 
+// Get game information required for the client
+const getGameInfo = async (gameId) => {
+  let info = null;
+
+  await getGame(gameId).then((game) => {
+    if (game) {
+      info = {
+        board: game.board,
+        gamePlayers: game.players,
+        nextMove: game.nextMove,
+        scores: [game.scoreOne, game.scoreTwo],
+      };
+    }
+  });
+
+  return info;
+};
+
 const gamePlayerExists = async (gameId, username) => {
   let exists = false;
 
-  await getGame(gameId).then(async (game) => {
+  await getGame(gameId).then((game) => {
     // Check if the player username is in the players array
     if (game && game.players.includes(username)) {
       exists = true;
@@ -127,6 +145,18 @@ const switchMove = async (gameId, currentPlayer) => {
   return nextPlayer;
 };
 
+const getGameState = async (gameId) => {
+  let state;
+
+  await getGame(gameId).then(async (game) => {
+    if (game) {
+      state = game.state;
+    }
+  });
+
+  return state;
+};
+
 // Update the state for a game
 const updateState = async (gameId, state) => {
   let updated = false;
@@ -163,7 +193,7 @@ const updateWinner = async (gameId, username) => {
 const getPlayerScores = async (gameId) => {
   let scores = [-1, -1];
 
-  await getGame(gameId).then(async (game) => {
+  await getGame(gameId).then((game) => {
     if (game) {
       scores = [game.scoreOne, game.scoreTwo];
     }
@@ -179,6 +209,8 @@ module.exports = {
   getGamePlayer,
   getRandomPlayer,
   getPlayerScores,
+  getGameState,
+  getGameInfo,
   gamePlayerExists,
   addGamePlayer,
   updateState,

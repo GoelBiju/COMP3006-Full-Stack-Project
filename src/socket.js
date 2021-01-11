@@ -10,6 +10,8 @@ const {
   updateWinner,
   getGamePlayer,
   gamePlayerExists,
+  getGameInfo,
+  getGameState,
 } = require("./controllers/GameController");
 const { makeMove, performChecks } = require("./logic");
 
@@ -90,7 +92,6 @@ async function handleJoin(socket, gameId, username) {
             // Send back to client
             socket.emit("game", {
               status: "start",
-              // Find the other players username
               opponent: gamePlayers.find((player) => player != username),
               id: gamePlayers.findIndex((player) => player == username),
               gamePlayers,
@@ -118,7 +119,35 @@ async function handleJoin(socket, gameId, username) {
       console.log(`Connection from ${username} rejected, game full`);
     }
   } else {
-    // Send the current game information for the client to update
+    // Check if the game is full and in progress
+    const state = await getGameState(gameId);
+    console.log("Current game state: ", state);
+    if (state === 0) {
+      // Send the current game information for the client to update
+      const gameInfo = await getGameInfo(gameId);
+      console.log("Game info: ", gameInfo);
+
+      if (gameInfo) {
+        socket.emit("game", {
+          ...gameInfo,
+
+          // Fill in extra details to enable game to resume
+          status: "resume",
+          opponent: gameInfo.gamePlayers.find((player) => player != username),
+          id: gameInfo.gamePlayers.findIndex((player) => player == username),
+        });
+      } else {
+        socket.emit("game", {
+          status: "error, unable to retrieve game info (server)",
+        });
+      }
+    } else if (state === -1) {
+      socket.emit("game", { status: "wait" });
+    } else {
+      // Reject if already full
+      socket.emit("reject", "Game unavailable or full");
+      console.log(`Connection from ${username} rejected, game full`);
+    }
   }
 }
 
