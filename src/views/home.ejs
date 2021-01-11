@@ -54,7 +54,7 @@
                   </thead>
                   <tbody>
                     <!-- Loop over players game history -->
-                    <% for(let i = 0; i < gameHistory.length; i++) { %>
+                    <% for (let i = 0; i < gameHistory.length; i++) { %>
                       <!-- Win/draw/loss -->
                       <tr>
                         <th scope="row"><%= gameHistory[i].date %></td>
@@ -86,34 +86,39 @@
           <div class="card">
             <div class="card-body">
               <h2>Join game</h2>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <!-- <th scope="col">#ID</th> -->
-                    <th scope="col">Opponent</th>
-                    <th scope="col">Status</th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <!-- In Play (show in a separate table) -->
-                  <tr>
-                    <!-- <th scope="row">1234</th> -->
-                    <td scope="row">test</td>
-                    <td colspan="2">In Play</td>
-                  </tr>
 
-                  <!-- Available -->
-                  <tr>
-                    <!-- <th scope="row">1321</th> -->
-                    <td scope="row">john</td>
-                    <td>Available</td>
-                    <td>
-                      <a href="#" class="btn btn-primary btn-sm" role="button">Play</a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <% if (availableGames.length > 0) { %>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <!-- <th scope="col">#ID</th> -->
+                      <th scope="col">Date</th>
+                      <th scope="col">Opponent</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for (let i = 0; i < availableGames.length; i++) { %>
+                      <!-- Available (games with a state of -1 or 0) -->
+                      <tr>
+                        <td scope="row"><%= availableGames[i].date %></td>
+                        <td><%= availableGames[i].opponent %></td>
+                        <td>
+                          <a href="/game/<%= availableGames[i].id %>" id="play-btn-<%= i + 1 %>" class="btn btn-primary btn-sm" role="button">Join</a>
+                        </td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              <% } else { %>
+                <p>There are no games available currently. Create a game for others to join.</p>
+              <% } %>
+
+              <!-- In Play (show in a separate table) -->
+              <!-- <tr>
+                <td scope="row">test</td>
+                <td colspan="2">In Play</td>
+              </tr> -->
             </div>
           </div>
         </div>

@@ -4,30 +4,45 @@ const Game = require("./models/Game");
 async function homeRoute(req, res) {
   const { username } = req.user;
   let gameHistory = [];
+  let availableGames = [];
 
   // Get all the user's games
-  const games = await Game.find({ players: username }).exec();
-  if (games) {
-    gameHistory = games
+  const userGames = await Game.find({ players: username }).exec();
+  if (userGames) {
+    gameHistory = userGames
       .filter((g) => [1, 2, 3, 4].includes(g.state))
       .map((g) => ({
-        date: g.createdAt,
+        date: g.createdAt.toLocaleString(),
         opponent: g.players.find((p) => p != username),
         scores: [g.scoreOne, g.scoreTwo],
         winner: g.winner,
         state: g.state,
       }));
-    console.log("Got user games: ", gameHistory);
+    console.log("Got user game history: ", gameHistory);
   } else {
     res.json({
-      message: `An error occurred: ${err}`,
+      message: `An error occurred`,
     });
+  }
+
+  const allGames = await Game.find({}).exec();
+  if (allGames) {
+    availableGames = allGames
+      .filter((g) => g.state == -1)
+      .map((g) => ({
+        id: g._id,
+        date: g.createdAt.toLocaleString(),
+        opponent: g.players.find((p) => p !== "" && p !== username),
+        state: g.state,
+      }));
+    console.log("Available games: ", availableGames);
   }
 
   // Get all the games
   res.render("home", {
     username,
     gameHistory,
+    availableGames,
   });
 }
 
