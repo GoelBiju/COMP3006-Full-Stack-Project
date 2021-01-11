@@ -22,6 +22,13 @@ $(function () {
   let myId = -1;
   let currentPlayer = -1;
 
+  // Set game status
+  $("#game-status").text("No game");
+
+  // Set opponent and player turn
+  $("#opponent-name").text("No opponent");
+  $("#player-turn").text("");
+
   // Helper to set the modal with information
   function showGameModal(message, redirect = "") {
     // Set the body with the message
@@ -166,27 +173,10 @@ $(function () {
     console.log(`Sent game action (${action}): ${data}`);
   }
 
-  // TODO: When document is ready perform a join on the room.
-  // Join a game
-  $("#join").click(function () {
-    // Reset other fields
-    gameJoined = false;
-
-    // Set game status
-    $("#game-status").text("No game");
-
-    // Set opponent and player turn
-    $("#opponent-name").text("No opponent");
-    $("#player-turn").text("");
-
-    // Send some user info
-    emitGameAction("join", getUsername());
-  });
-
   // Connection message from server
   socket.on("connection", function (msg) {
     console.log("Connection message: ", msg);
-    $("#conn-status").html("Connection: " + msg);
+    // $("#conn-status").html("Connection: " + msg);
   });
 
   // Receiving game information
@@ -252,14 +242,16 @@ $(function () {
 
       // Check if we received a win, lost or draw result.
       if (moveInfo.win) {
-        $(".wrapper").css("min-height", "100vh");
+        setTimeout(() => {
+          $(".wrapper").css("min-height", "100vh");
 
-        // Create confetti for win
-        for (let i = 0; i < 150; i++) {
-          createConfetti(i);
-        }
+          // Create confetti for win
+          for (let i = 0; i < 150; i++) {
+            createConfetti(i);
+          }
 
-        showResultModal(playerScores[0], playerScores[1], "You Win", "green");
+          showResultModal(playerScores[0], playerScores[1], "You Win", "green");
+        }, 1000);
       } else if (moveInfo.lost) {
         showResultModal(playerScores[0], playerScores[1], "You Lost", "red");
       } else if (moveInfo.result) {
@@ -287,10 +279,6 @@ $(function () {
   function handleMove(event) {
     if (gameJoined && myTurn()) {
       // Send a message to the server to move this piece.
-      // socket.emit("move", {
-      //   id: myId,
-      //   column: event.target.cellIndex,
-      // });
       emitGameAction("move", {
         id: myId,
         column: event.target.cellIndex,
@@ -303,4 +291,7 @@ $(function () {
     $(this).click(handleMove);
     $(this).css("backgroundColor", "white");
   });
+
+  // Join a game, send some user info
+  emitGameAction("join", getUsername());
 });

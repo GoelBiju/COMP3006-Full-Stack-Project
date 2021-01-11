@@ -12,9 +12,6 @@ const {
 } = require("./controllers/GameController");
 const { makeMove, performChecks } = require("./logic");
 
-// TODO: Implement rooms based on game
-// const gameId = "1";
-
 // Handle socket events.
 function handleConnection(socket) {
   // Emit a connection success to client
@@ -29,22 +26,21 @@ function handleGame(socket, gameData) {
   console.log("Game data: ", gameData);
 
   // Get game action and data.
-  const { action, data } = gameData;
+  const { gameId, action, data } = gameData;
   switch (action) {
     case "join":
-      handleJoin(socket, data);
+      handleJoin(socket, gameId, data);
       break;
 
     case "move":
-      handleMove(socket, data);
+      handleMove(socket, gameId, data);
       break;
   }
 }
 
 // Handle a join request to a game with the game ID and username
-async function handleJoin(socket, username) {
-  // TODO: get the gameId
-  console.log("User join request: ", username);
+async function handleJoin(socket, gameId, username) {
+  console.log("User join request: ", username, gameId);
 
   // Add the user to the game.
   const res = await addGamePlayer(gameId, username);
@@ -115,8 +111,9 @@ async function handleJoin(socket, username) {
   }
 }
 
-async function handleMove(socket, moveInfo) {
-  console.log(`Move info from ${moveInfo.id}: `, moveInfo);
+// Handle move actions in a game
+async function handleMove(socket, gameId, moveInfo) {
+  console.log(`Move info from ${moveInfo.id} (${gameId}): `, moveInfo);
 
   // Get id and column from move.
   const { id, column } = moveInfo;

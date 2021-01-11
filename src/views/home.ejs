@@ -85,13 +85,18 @@
         <div class="col">
           <div class="card">
             <div class="card-body">
+              <h2>Continue a game</h2>
+            </div>
+          </div> 
+
+          <div class="card">
+            <div class="card-body">
               <h2>Join game</h2>
 
               <% if (availableGames.length > 0) { %>
                 <table class="table">
                   <thead>
                     <tr>
-                      <!-- <th scope="col">#ID</th> -->
                       <th scope="col">Date</th>
                       <th scope="col">Opponent</th>
                       <th scope="col"></th>
@@ -111,14 +116,8 @@
                   </tbody>
                 </table>
               <% } else { %>
-                <p>There are no games available currently. Create a game for others to join.</p>
+                <p>There are no games open to join. Create a game for others to join you or continue ones already started.</p>
               <% } %>
-
-              <!-- In Play (show in a separate table) -->
-              <!-- <tr>
-                <td scope="row">test</td>
-                <td colspan="2">In Play</td>
-              </tr> -->
             </div>
           </div>
         </div>
