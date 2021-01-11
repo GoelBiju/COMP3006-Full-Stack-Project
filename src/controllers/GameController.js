@@ -6,6 +6,19 @@ const getGame = async (id) => {
   return game;
 };
 
+const gamePlayerExists = async (gameId, username) => {
+  let exists = false;
+
+  await getGame(gameId).then(async (game) => {
+    // Check if the player username is in the players array
+    if (game && game.players.includes(username)) {
+      exists = true;
+    }
+  });
+
+  return exists;
+};
+
 // Add a player to the game
 const addGamePlayer = async (gameId, username) => {
   let added = false;
@@ -166,6 +179,7 @@ module.exports = {
   getGamePlayer,
   getRandomPlayer,
   getPlayerScores,
+  gamePlayerExists,
   addGamePlayer,
   updateState,
   updateWinner,
