@@ -278,7 +278,7 @@ $(function () {
       // Update player scores
       $("#my-remaining-coins").text(42 - playerScores[myId]);
       $("#opponent-remaining-coins").text(
-        42 - playerScores[gamePlayers.find((id) => id != myId)]
+        42 - playerScores[gamePlayers.findIndex((u) => u != username)]
       );
 
       // Check if we received a win, lost or draw result.

@@ -128,6 +128,10 @@ async function handleJoin(socket, gameId, username) {
       console.log("Game info: ", gameInfo);
 
       if (gameInfo) {
+        // Add the player to game.
+        socket.join(gameId);
+        console.log(`Added player (${username}) to game ${gameId}`);
+
         socket.emit("game", {
           ...gameInfo,
 
@@ -142,6 +146,10 @@ async function handleJoin(socket, gameId, username) {
         });
       }
     } else if (state === -1) {
+      // Add the player to game.
+      socket.join(gameId);
+      console.log(`Added player (${username}) to game ${gameId}`);
+
       socket.emit("game", { status: "wait" });
     } else {
       // Reject if already full

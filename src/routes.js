@@ -13,7 +13,7 @@ async function homeRoute(req, res) {
       .filter((g) => [1, 2, 3, 4].includes(g.state))
       .map((g) => ({
         date: g.createdAt.toLocaleString(),
-        opponent: g.players.find((p) => p != username),
+        opponent: g.players.find((p) => p !== username),
         scores: [g.scoreOne, g.scoreTwo],
         winner: g.winner,
         state: g.state,
@@ -28,11 +28,12 @@ async function homeRoute(req, res) {
   const allGames = await Game.find({}).exec();
   if (allGames) {
     availableGames = allGames
-      .filter((g) => g.state == -1)
+      .filter((g) => g.state == -1 || g.state == 0)
       .map((g) => ({
         id: g._id,
         date: g.createdAt.toLocaleString(),
-        opponent: g.players.find((p) => p !== "" && p !== username),
+        opponent:
+          g.players.find((p) => p !== "" && p !== username) || "WAITING",
         state: g.state,
       }));
     console.log("Available games: ", availableGames);
