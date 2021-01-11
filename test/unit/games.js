@@ -13,13 +13,13 @@ const {
   getGamePlayers,
 } = require("../../src/controllers/GameController");
 
-// Start test database
-connectTestDb();
-
-suite("Game - Controller/Model", () => {
+suite.skip("Game - Controller/Model", () => {
   let gameData;
 
   suiteSetup(async () => {
+    // Start test database
+    await connectTestDb();
+
     // Create expected game data
     gameData = {
       _id: 1,
