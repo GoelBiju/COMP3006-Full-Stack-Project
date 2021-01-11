@@ -3,25 +3,32 @@ const Game = require("./models/Game");
 
 async function homeRoute(req, res) {
   const { username } = req.user;
-  let userGames = [];
+  let gameHistory = [];
 
   // Get all the user's games
-  await Game.find({ players: username })
-    .then((games) => {
-      userGames = games.map((g) => {
-        g._id, g.state;
-      });
-    })
-    .catch((err) => {
-      res.json({
-        message: `An error occurred: ${err}`,
-      });
+  const games = await Game.find({ players: username }).exec();
+  if (games) {
+    gameHistory = games
+      .filter((g) => [1, 2, 3, 4].includes(g.state))
+      .map((g) => ({
+        date: g.createdAt,
+        opponent: g.players.find((p) => p != username),
+        scores: [g.scoreOne, g.scoreTwo],
+        winner: g.winner,
+        state: g.state,
+      }));
+    console.log("Got user games: ", gameHistory);
+  } else {
+    res.json({
+      message: `An error occurred: ${err}`,
     });
-
-  console.log("Got user games: ", userGames);
+  }
 
   // Get all the games
-  res.render("home", { username });
+  res.render("home", {
+    username,
+    gameHistory,
+  });
 }
 
 function gameRoute(req, res) {
