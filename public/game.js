@@ -11,11 +11,9 @@ $(function () {
 
   // Get table rows
   let tableRows = $("tr");
-  // console.log("Got table rows: ", tableRows);
 
   // Get cells and slots
   let tableCells = $("td");
-  // console.log("Got table cells: ", tableCells);
 
   // Player information
   let gamePlayers = [];
@@ -28,6 +26,17 @@ $(function () {
   // Set opponent and player turn
   $("#opponent-name").text("No opponent");
   $("#player-turn").text("");
+
+  // Copy the game link to the clipboard
+  $("#copyLinkBtn").click(function () {
+    let gameLink = window.location.href;
+    let tempInput = $("<input>");
+    $("body").append(tempInput);
+    tempInput.value = gameLink;
+    tempInput.val(window.location.href).select();
+    document.execCommand("copy");
+    tempInput.remove();
+  });
 
   // Helper to set the modal with information
   function showGameModal(message, redirect = "") {

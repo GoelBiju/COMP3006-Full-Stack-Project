@@ -151,7 +151,6 @@ async function handleMove(socket, gameId, moveInfo) {
           state,
           row,
           column,
-          // TODO: colour should be associated to players
           colour: id == 0 ? "red" : "yellow",
           // Return both player scores
           playerScores,
