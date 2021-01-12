@@ -52,7 +52,7 @@ suite("e2e - home", function () {
     ]);
   });
 
-  test("it should join a created game", async function () {
+  test.skip("it should join a created game", async function () {
     await page.goto(baseUrl + "/login");
     await page.type("#username", "test2");
     await page.type("#password", "test2");
