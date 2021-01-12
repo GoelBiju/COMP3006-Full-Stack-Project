@@ -16,8 +16,6 @@ const authApiRoute = require("./src/apiRoutes/auth");
 const gameApiRoute = require("./src/apiRoutes/game");
 const authenticate = require("./src/middleware/authenticate");
 
-const { createGame } = require("./src/controllers/GameController");
-
 // Database connection using Heroku or localhost
 let mongoDBUrl =
   process.env.MONGODB_URI || "mongodb://localhost:27017/connect4";
@@ -37,38 +35,6 @@ db.on("error", (err) => {
 
 db.once("open", async () => {
   console.log("Connected to database.");
-
-  // Create a single game.
-  // await Game.findById("1", async function (err, game) {
-  //   if (game) {
-  //     game.players = [];
-  //     game.board = [
-  //       [-1, -1, -1, -1, -1, -1, -1],
-  //       [-1, -1, -1, -1, -1, -1, -1],
-  //       [-1, -1, -1, -1, -1, -1, -1],
-  //       [-1, -1, -1, -1, -1, -1, -1],
-  //       [-1, -1, -1, -1, -1, -1, -1],
-  //       [-1, -1, -1, -1, -1, -1, -1],
-  //     ];
-  //     game.nextMove = -1;
-  //     game.state = 0;
-  //     game.scoreOne = 0;
-  //     game.scoreTwo = 0;
-  //     game.winner = "";
-
-  //     game.save();
-  //     console.log("Reset test values.");
-  //   } else {
-  //     console.log("No game with ID: 1");
-
-  //     // const g = await Game.create({ _id: "1" });
-  //     // await g.save();
-
-  //     console.log("New game with ID: ", game._id);
-  //   }
-  // });
-  // createGame();
-
   // Set mongoose debugging information to show in console
   mongoose.set("debug", true);
 });
