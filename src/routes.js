@@ -5,10 +5,12 @@ async function homeRoute(req, res) {
   const { username } = req.user;
   let gameHistory = [];
   let availableGames = [];
-  let resumeGames = [];
+  let activeGames = [];
 
   // Get all the user's games
-  const userGames = await Game.find({ players: username }).exec();
+  const userGames = await Game.find({ players: username })
+    .sort({ createdAt: "desc" })
+    .exec();
   if (userGames) {
     gameHistory = userGames
       .filter((g) => [1, 2, 3, 4].includes(g.state))
@@ -21,31 +23,32 @@ async function homeRoute(req, res) {
       }));
     console.log("Got user game history: ", gameHistory);
 
-    resumeGames = userGames
-      .filter((g) => g.state === 0)
+    // Create active (in-play or created) games
+    activeGames = userGames
+      .filter((g) => g.state === -1 || g.state === 0)
       .map((g) => ({
         id: g._id,
         date: g.createdAt.toLocaleString(),
-        opponent: g.players.find((p) => p !== username),
+        opponent:
+          g.state === 0 ? g.players.find((p) => p !== username) : "WAITING",
         scores: [g.scoreOne, g.scoreTwo],
+        state: g.state,
       }));
-    console.log("Got resume games: ", gameHistory);
+    console.log("Got active games: ", activeGames);
   } else {
     res.json({
       message: `An error occurred`,
     });
   }
 
-  const allGames = await Game.find({}).exec();
+  const allGames = await Game.find({}).sort({ createdAt: "desc" }).exec();
   if (allGames) {
     availableGames = allGames
       .filter((g) => g.state == -1 && !g.players.includes(username))
       .map((g) => ({
         id: g._id,
         date: g.createdAt.toLocaleString(),
-        opponent:
-          // g.players.find((p) => p !== "" && p !== username) || "WAITING",
-          g.players.find((p) => p !== ""),
+        opponent: g.players.find((p) => p !== ""),
         state: g.state,
       }));
     console.log("Available games: ", availableGames);
@@ -56,7 +59,7 @@ async function homeRoute(req, res) {
     username,
     gameHistory,
     availableGames,
-    resumeGames,
+    activeGames,
   });
 }
 

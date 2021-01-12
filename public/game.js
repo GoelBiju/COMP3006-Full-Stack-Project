@@ -283,16 +283,16 @@ $(function () {
 
       // Check if we received a win, lost or draw result.
       if (moveInfo.win) {
-        setTimeout(() => {
-          $(".wrapper").css("min-height", "100vh");
+        $(".wrapper").css("min-height", "100vh");
 
+        setTimeout(() => {
           // Create confetti for win
           for (let i = 0; i < 150; i++) {
             createConfetti(i);
           }
-
-          showResultModal(playerScores[0], playerScores[1], "You Win", "green");
         }, 1000);
+
+        showResultModal(playerScores[0], playerScores[1], "You Win", "green");
       } else if (moveInfo.lost) {
         showResultModal(playerScores[0], playerScores[1], "You Lost", "red");
       } else if (moveInfo.result) {

@@ -40,7 +40,7 @@
         <div class="col">
           <div class="card">
             <div class="card-body">
-              <h2>Game history</h2>
+              <h2>Game History</h2>
 
               <% if (gameHistory.length > 0) { %>
                 <table class="table">
@@ -83,10 +83,10 @@
         </div>
 
         <div class="col">
-          <% if (resumeGames.length > 0) { %>
+          <% if (activeGames.length > 0) { %>
             <div class="card">
               <div class="card-body">
-                <h2>Resume a game</h2>
+                <h2>Active Games</h2>
                 <table class="table">
                   <thead>
                     <tr>
@@ -98,15 +98,28 @@
                   </thead>
 
                   <tbody>
-                    <% for (let i = 0; i < resumeGames.length; i++) { %>
-                      <!-- Resume (games with a state of 0) -->
+                    <% for (let i = 0; i < activeGames.length; i++) { %>
+                      <!-- Active (games with a state of 0 or -1 which you created) -->
                       <tr>
-                        <td scope="row"><%= resumeGames[i].date %></td>
-                        <td><%= resumeGames[i].opponent %></td>
-                        <td><%= resumeGames[i].scores[0] %> - <%= resumeGames[i].scores[1] %></td>
-                        <td>
-                          <a href="/game/<%= resumeGames[i].id %>" id="resume-btn-<%= i + 1 %>" class="btn btn-primary btn-sm" role="button">Resume</a>
-                        </td>
+                        <td scope="row"><%= activeGames[i].date %></td>
+
+                        <% if (activeGames[i].state === 0) { %>
+                        <td><%= activeGames[i].opponent %></td>
+                        <% } else { %>
+                          <td>WAITING</td>
+                        <% } %>
+
+                        <% if (activeGames[i].state === 0) { %>
+                          <td><%= activeGames[i].scores[0] %> - <%= activeGames[i].scores[1] %></td>
+                        <% } else { %>
+                          <td>N/A</td>
+                        <% } %>
+                        
+                        <% if (activeGames[i].state === 0) { %>
+                          <td>
+                            <a href="/game/<%= activeGames[i].id %>" id="active-btn-<%= i + 1 %>" class="btn btn-primary btn-sm" role="button">Continue</a>
+                          </td>
+                        <% } %>
                       </tr>
                     <% } %>
                   </tbody>
@@ -117,7 +130,7 @@
 
           <div class="card">
             <div class="card-body">
-              <h2>Join game</h2>
+              <h2>Join Game</h2>
 
               <% if (availableGames.length > 0) { %>
                 <table class="table">
