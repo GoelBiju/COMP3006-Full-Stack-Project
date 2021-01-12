@@ -9,7 +9,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "nyc --reporter=html --reporter=text mocha -ui tdd test/unit/",
+    "run-test": "nyc --reporter=html --reporter=text mocha -ui tdd test/e2e/ --recursive --timeout 10000",
+    "test": "start-server-and-test start http://localhost:9000 run-test",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
@@ -40,6 +41,8 @@
     "mocha": "^8.2.1",
     "mongodb-memory-server": "^6.9.2",
     "nodemon": "^2.0.6",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "puppeteer": "^5.5.0",
+    "start-server-and-test": "^1.11.7"
   }
 }
