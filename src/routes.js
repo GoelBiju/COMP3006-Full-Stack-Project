@@ -3,25 +3,61 @@ const Game = require("./models/Game");
 
 async function homeRoute(req, res) {
   const { username } = req.user;
-  let userGames = [];
+  let gameHistory = [];
+  let availableGames = [];
+  let resumeGames = [];
 
   // Get all the user's games
-  await Game.find({ players: username })
-    .then((games) => {
-      userGames = games.map((g) => {
-        g._id, g.state;
-      });
-    })
-    .catch((err) => {
-      res.json({
-        message: `An error occurred: ${err}`,
-      });
-    });
+  const userGames = await Game.find({ players: username }).exec();
+  if (userGames) {
+    gameHistory = userGames
+      .filter((g) => [1, 2, 3, 4].includes(g.state))
+      .map((g) => ({
+        date: g.createdAt.toLocaleString(),
+        opponent: g.players.find((p) => p !== username),
+        scores: [g.scoreOne, g.scoreTwo],
+        winner: g.winner,
+        state: g.state,
+      }));
+    console.log("Got user game history: ", gameHistory);
 
-  console.log("Got user games: ", userGames);
+    resumeGames = userGames
+      .filter((g) => g.state === 0)
+      .map((g) => ({
+        id: g._id,
+        date: g.createdAt.toLocaleString(),
+        opponent: g.players.find((p) => p !== username),
+        scores: [g.scoreOne, g.scoreTwo],
+      }));
+    console.log("Got resume games: ", gameHistory);
+  } else {
+    res.json({
+      message: `An error occurred`,
+    });
+  }
+
+  const allGames = await Game.find({}).exec();
+  if (allGames) {
+    availableGames = allGames
+      .filter((g) => g.state == -1 && !g.players.includes(username))
+      .map((g) => ({
+        id: g._id,
+        date: g.createdAt.toLocaleString(),
+        opponent:
+          // g.players.find((p) => p !== "" && p !== username) || "WAITING",
+          g.players.find((p) => p !== ""),
+        state: g.state,
+      }));
+    console.log("Available games: ", availableGames);
+  }
 
   // Get all the games
-  res.render("home", { username });
+  res.render("home", {
+    username,
+    gameHistory,
+    availableGames,
+    resumeGames,
+  });
 }
 
 function gameRoute(req, res) {

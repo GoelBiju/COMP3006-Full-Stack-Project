@@ -1,26 +1,41 @@
 $(function () {
-  // Create socket
-  let socket = io();
-
   // Get gameId
   console.log("Game ID: ", gameId);
 
+  // Create socket
+  let socket = io();
+
   // Game settings
   let gameJoined = false;
-  let getUsername = () => $("#player-name").val();
 
   // Get table rows
   let tableRows = $("tr");
-  // console.log("Got table rows: ", tableRows);
 
   // Get cells and slots
   let tableCells = $("td");
-  // console.log("Got table cells: ", tableCells);
 
   // Player information
   let gamePlayers = [];
   let myId = -1;
   let currentPlayer = -1;
+
+  // Set game status
+  $("#game-status").text("No game");
+
+  // Set opponent and player turn
+  $("#opponent-name").text("No opponent");
+  $("#player-turn").text("");
+
+  // Copy the game link to the clipboard
+  $("#copyLinkBtn").click(function () {
+    let gameLink = window.location.href;
+    let tempInput = $("<input>");
+    $("body").append(tempInput);
+    tempInput.value = gameLink;
+    tempInput.val(window.location.href).select();
+    document.execCommand("copy");
+    tempInput.remove();
+  });
 
   // Helper to set the modal with information
   function showGameModal(message, redirect = "") {
@@ -137,8 +152,6 @@ $(function () {
     );
   }
 
-  // showResultModal(10, 10, "You Win", "green");
-
   // Get next move
   const getPlayerTurn = () => gamePlayers[currentPlayer];
 
@@ -166,34 +179,32 @@ $(function () {
     console.log(`Sent game action (${action}): ${data}`);
   }
 
-  // TODO: When document is ready perform a join on the room.
-  // Join a game
-  $("#join").click(function () {
-    // Reset other fields
-    gameJoined = false;
-
-    // Set game status
-    $("#game-status").text("No game");
-
-    // Set opponent and player turn
-    $("#opponent-name").text("No opponent");
-    $("#player-turn").text("");
-
-    // Send some user info
-    emitGameAction("join", getUsername());
-  });
+  function updateBoard(board) {
+    console.log("Updating board: ", board);
+    for (let row = 0; row < board.length; row++) {
+      for (let col = 0; col < board[row].length; col++) {
+        const value = board[row][col];
+        if (value !== -1) {
+          let colour = value === 0 ? "red" : "yellow";
+          $(tableRows.eq(row).children().eq(col)).css(
+            "backgroundColor",
+            colour
+          );
+        }
+      }
+    }
+  }
 
   // Connection message from server
   socket.on("connection", function (msg) {
     console.log("Connection message: ", msg);
-    $("#conn-status").html("Connection: " + msg);
   });
 
   // Receiving game information
   socket.on("game", function (gameInfo) {
     console.log("Game info: ", gameInfo);
 
-    if (gameInfo.status == "start") {
+    if (gameInfo.status == "start" || gameInfo.status == "resume") {
       // Set up the players
       myId = gameInfo.id;
       currentPlayer = gameInfo.nextMove;
@@ -205,6 +216,26 @@ $(function () {
       // Set opponent and player turn
       $("#opponent-name").text(`Your opponent: ${gameInfo.opponent}`);
       $("#player-turn").text(`Player Turn: ${getPlayerTurn()}`);
+
+      // Update the board and scores
+      if (gameInfo.status == "resume") {
+        console.log("Received resume");
+
+        // Update the board
+        updateBoard(gameInfo.board);
+
+        // Update the scores
+        console.log(
+          "Game scores: ",
+          myId,
+          gameInfo.scores[myId],
+          gamePlayers.findIndex((u) => u != username)
+        );
+        $("#my-remaining-coins").text(42 - gameInfo.scores[myId]);
+        $("#opponent-remaining-coins").text(
+          42 - gameInfo.scores[gamePlayers.findIndex((u) => u != username)]
+        );
+      }
 
       // Set game joined to allow moves
       gameJoined = true;
@@ -247,19 +278,21 @@ $(function () {
       // Update player scores
       $("#my-remaining-coins").text(42 - playerScores[myId]);
       $("#opponent-remaining-coins").text(
-        42 - playerScores.find((id) => id != myId)
+        42 - playerScores[gamePlayers.findIndex((u) => u != username)]
       );
 
       // Check if we received a win, lost or draw result.
       if (moveInfo.win) {
-        $(".wrapper").css("min-height", "100vh");
+        setTimeout(() => {
+          $(".wrapper").css("min-height", "100vh");
 
-        // Create confetti for win
-        for (let i = 0; i < 150; i++) {
-          createConfetti(i);
-        }
+          // Create confetti for win
+          for (let i = 0; i < 150; i++) {
+            createConfetti(i);
+          }
 
-        showResultModal(playerScores[0], playerScores[1], "You Win", "green");
+          showResultModal(playerScores[0], playerScores[1], "You Win", "green");
+        }, 1000);
       } else if (moveInfo.lost) {
         showResultModal(playerScores[0], playerScores[1], "You Lost", "red");
       } else if (moveInfo.result) {
@@ -287,10 +320,6 @@ $(function () {
   function handleMove(event) {
     if (gameJoined && myTurn()) {
       // Send a message to the server to move this piece.
-      // socket.emit("move", {
-      //   id: myId,
-      //   column: event.target.cellIndex,
-      // });
       emitGameAction("move", {
         id: myId,
         column: event.target.cellIndex,
@@ -303,4 +332,7 @@ $(function () {
     $(this).click(handleMove);
     $(this).css("backgroundColor", "white");
   });
+
+  // Join a game, send some user info
+  emitGameAction("join", username);
 });
