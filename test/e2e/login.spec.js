@@ -6,7 +6,7 @@ suite("e2e - register and login", function () {
   let page;
 
   suiteSetup(async function () {
-    browser = await puppeteer.launch({ headless: false });
+    browser = await puppeteer.launch();
     page = await browser.newPage();
   });
 
