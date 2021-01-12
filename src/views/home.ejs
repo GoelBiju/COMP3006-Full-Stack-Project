@@ -83,11 +83,37 @@
         </div>
 
         <div class="col">
-          <div class="card">
-            <div class="card-body">
-              <h2>Continue a game</h2>
+          <% if (resumeGames.length > 0) { %>
+            <div class="card">
+              <div class="card-body">
+                <h2>Resume a game</h2>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Opponent</th>
+                      <th scope="col">Score</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <% for (let i = 0; i < resumeGames.length; i++) { %>
+                      <!-- Resume (games with a state of 0) -->
+                      <tr>
+                        <td scope="row"><%= resumeGames[i].date %></td>
+                        <td><%= resumeGames[i].opponent %></td>
+                        <td><%= resumeGames[i].scores[0] %> - <%= resumeGames[i].scores[1] %></td>
+                        <td>
+                          <a href="/game/<%= resumeGames[i].id %>" id="resume-btn-<%= i + 1 %>" class="btn btn-primary btn-sm" role="button">Resume</a>
+                        </td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div> 
+          <% } %>
 
           <div class="card">
             <div class="card-body">
@@ -104,7 +130,7 @@
                   </thead>
                   <tbody>
                     <% for (let i = 0; i < availableGames.length; i++) { %>
-                      <!-- Available (games with a state of -1 or 0) -->
+                      <!-- Available (games with a state of -1) -->
                       <tr>
                         <td scope="row"><%= availableGames[i].date %></td>
                         <td><%= availableGames[i].opponent %></td>
@@ -116,7 +142,7 @@
                   </tbody>
                 </table>
               <% } else { %>
-                <p>There are no games open to join. Create a game for others to join you or continue ones already started.</p>
+                <p>There are no games open to join. Create a game for others to join you.</p>
               <% } %>
             </div>
           </div>

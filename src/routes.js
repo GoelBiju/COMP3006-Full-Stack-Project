@@ -5,6 +5,7 @@ async function homeRoute(req, res) {
   const { username } = req.user;
   let gameHistory = [];
   let availableGames = [];
+  let resumeGames = [];
 
   // Get all the user's games
   const userGames = await Game.find({ players: username }).exec();
@@ -19,6 +20,16 @@ async function homeRoute(req, res) {
         state: g.state,
       }));
     console.log("Got user game history: ", gameHistory);
+
+    resumeGames = userGames
+      .filter((g) => g.state === 0)
+      .map((g) => ({
+        id: g._id,
+        date: g.createdAt.toLocaleString(),
+        opponent: g.players.find((p) => p !== username),
+        scores: [g.scoreOne, g.scoreTwo],
+      }));
+    console.log("Got resume games: ", gameHistory);
   } else {
     res.json({
       message: `An error occurred`,
@@ -28,12 +39,13 @@ async function homeRoute(req, res) {
   const allGames = await Game.find({}).exec();
   if (allGames) {
     availableGames = allGames
-      .filter((g) => g.state == -1 || g.state == 0)
+      .filter((g) => g.state == -1 && !g.players.includes(username))
       .map((g) => ({
         id: g._id,
         date: g.createdAt.toLocaleString(),
         opponent:
-          g.players.find((p) => p !== "" && p !== username) || "WAITING",
+          // g.players.find((p) => p !== "" && p !== username) || "WAITING",
+          g.players.find((p) => p !== ""),
         state: g.state,
       }));
     console.log("Available games: ", availableGames);
@@ -44,6 +56,7 @@ async function homeRoute(req, res) {
     username,
     gameHistory,
     availableGames,
+    resumeGames,
   });
 }
 
