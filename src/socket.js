@@ -29,6 +29,7 @@ function handleConnection(socket) {
   socket.on("streamSetup", (streamData) => handleStream(socket, streamData));
 }
 
+// TODO: Can we replace streamPeers with socket.io rooms?
 function handleStream(socket, streamData) {
   // Get game id and stream action/data
   const { gameId, action, data } = streamData;
@@ -39,7 +40,6 @@ function handleStream(socket, streamData) {
   // Handle stream actions
   switch (action) {
     case "join":
-      // TODO: game id sent to create a stream room
       console.log(`Client ${socket.id} connecting to game stream: ${gameId}`);
 
       // Initiate a connect to the client
@@ -52,6 +52,7 @@ function handleStream(socket, streamData) {
           streamPeers[id].emit("initReceive", socket.id);
         }
       }
+      // socket.to(`stream-${gameId}`).emit("initReceive", socket.id);
       break;
 
     // Relay peer connection signal to a specific socket
@@ -71,12 +72,14 @@ function handleStream(socket, streamData) {
       streamPeers[data.init_socket_id].emit("initSend", socket.id);
       break;
 
-    // case "disconnect":
-    //   console.log("socket disconnected: ", socket.id);
+    case "disconnect":
+      console.log("socket disconnected: ", socket.id);
 
-    //   // TODO: Replace with rooms
-    //   socket.broadcast.emit("removePeer", socket.id);
-    //   delete streamPeers[socket.id];
+      // TODO: Replace with rooms
+      // socket.broadcast.emit("removePeer", socket.id);
+      socket.to(`stream-${gameId}`).emit("removePeer", socket.id);
+      delete streamPeers[socket.id];
+
     default:
       console.log("Unhandled action and data: ", action, data);
       break;

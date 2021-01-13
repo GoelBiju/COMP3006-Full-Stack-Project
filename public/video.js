@@ -1,3 +1,6 @@
+// Excerpts of core logic from:
+// https://github.com/Dirvann/webrtc-video-conference-simple-peer
+
 let socket;
 
 let localStream = null;
@@ -21,10 +24,10 @@ let constraints = {
   audio: true,
   video: {
     width: {
-      max: 300,
+      max: 262,
     },
     height: {
-      max: 300,
+      max: 250,
     },
   },
 };
@@ -70,18 +73,19 @@ function init() {
     removePeer(socket_id);
   });
 
-  // Handle disconnect separately
-  socket.on("disconnect", () => {
-    console.log("GOT DISCONNECTED");
-    for (let socket_id in peers) {
-      removePeer(socket_id);
-    }
-  });
+  // // Handle disconnect separately
+  // socket.on("disconnect", () => {
+  //   console.log("GOT DISCONNECTED");
+  //   for (let socket_id in peers) {
+  //     removePeer(socket_id);
+  //   }
+  // });
 
   socket.on("signal", (data) => {
     peers[data.socket_id].signal(data.signal);
   });
 
+  // TODO: should only emit once clicking on a start video button
   // emit stream join event
   emitStreamEvent("join");
 }
@@ -142,6 +146,8 @@ function addPeer(socket_id, am_initiator) {
     newVid.className = "vid";
     newVid.onclick = () => openPictureMode(newVid);
     newVid.ontouchstart = (e) => openPictureMode(newVid);
+
+    // TODO: Check if this is our video or opponents
     videos.appendChild(newVid);
   });
 }

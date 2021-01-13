@@ -7,8 +7,43 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/game.css" />
 
+    <style>
+      .containers {
+        display: grid;
+        grid-gap: 5px;
+        grid-template-columns: repeat(auto-fit, 1fr);
+        grid-template-rows: repeat(auto-fit, 300px);
+      }
+
+      .container {
+        display: flex;
+      }
+
+      .vid {
+        flex: 0 1 auto;
+        height: 250px;
+      }
+
+      .settings {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 2px 2px;
+        cursor: pointer;
+      }
+    </style>
+
     <!-- socket.io -->
     <script src="/socket.io/socket.io.js" defer></script>
+
+    <!-- simple-peer and video handling -->
+    <!-- <script src="/simple-peer/simplepeer.min.js" defer></script> -->
+    <!-- <script src="/video.js" defer></script> -->
 
     <!-- Game related actions -->
     <script>
@@ -94,7 +129,21 @@
       <div class="d-flex flex-row gap-5">
         <div>
           <div class="card" style="width: 18rem">
-            <img src="/img/user.jpeg" width="100px" height="250px" alt="user-image" class="card-img-top" />
+            <div id="userMedia" class="container">
+              <video hidden id="localVideo" class="vid" autoplay muted></video>
+              <img src="/img/user.jpeg" width="100px" height="250px" alt="user-image" class="card-img-top" />
+            </div>
+
+            <!-- show video controls -->
+            <!-- <div style="text-align: center;">
+              <button id="muteButton" class="settings" onclick="toggleMute()">
+                Unmuted
+              </button>
+              <button id="vidButton" class="settings" onclick="toggleVid()">
+                Video Enabled
+              </button>
+            </div> -->
+
             <div class="card-body">
               <h5 class="card-title"><%= username %></h5>
               <p class="card-text">      
@@ -174,7 +223,10 @@
 
         <div>
           <div class="card" style="width: 18rem">
-            <img src="/img/user.jpeg" width="100px" height="250px" alt="opponent-image" class="card-img-top" />
+            <div id="opponentMedia" class="container">
+              <img src="/img/user.jpeg" width="100px" height="250px" alt="opponent-image" class="card-img-top" />
+            </div>
+
             <div class="card-body">
               <h5 id="opponent-name" class="card-title">No opponent</h5>
               <strong>Remaining coins: </strong><p id="opponent-remaining-coins">42</p>
