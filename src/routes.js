@@ -99,9 +99,14 @@ function registerRoute(req, res) {
   res.render("register");
 }
 
+function videoRoute(req, res) {
+  res.render("video");
+}
+
 module.exports = {
   homeRoute,
   gameRoute,
   loginRoute,
   registerRoute,
+  videoRoute,
 };

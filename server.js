@@ -35,6 +35,7 @@ db.on("error", (err) => {
 
 db.once("open", async () => {
   console.log("Connected to database.");
+  
   // Set mongoose debugging information to show in console
   mongoose.set("debug", true);
 });
@@ -54,6 +55,7 @@ app.use(cookieParser());
 
 // Configure to use statics
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "node_modules")));
 
 // Use ejs
 app.set("view engine", "ejs");
@@ -64,6 +66,7 @@ app.get("/", authenticate, routes.homeRoute);
 app.get("/game/:gameId", authenticate, routes.gameRoute);
 app.get("/login", routes.loginRoute);
 app.get("/register", routes.registerRoute);
+app.get("/video", routes.videoRoute);
 
 // Define API routes.
 app.use("/api", authApiRoute);
