@@ -15,6 +15,8 @@ const {
 } = require("./controllers/GameController");
 const { makeMove, performChecks } = require("./logic");
 
+let streamPeers = {};
+
 // Handle socket events.
 function handleConnection(socket) {
   // Emit a connection success to client
@@ -22,6 +24,63 @@ function handleConnection(socket) {
 
   // Handle game events.
   socket.on("game", (gameData) => handleGame(socket, gameData));
+
+  // Handle stream events.
+  socket.on("streamSetup", (streamData) => handleStream(socket, streamData));
+}
+
+function handleStream(socket, streamData) {
+  // Get game id and stream action/data
+  const { gameId, action, data } = streamData;
+
+  console.log(`Stream setup message from ${socket.id} for ${gameId}`);
+  console.log(`Game ${gameId}, action: ${action}, data: `, data);
+
+  // Handle stream actions
+  switch (action) {
+    case "join":
+      // TODO: game id sent to create a stream room
+      console.log(`Client ${socket.id} connecting to game stream: ${gameId}`);
+
+      // Initiate a connect to the client
+      streamPeers[socket.id] = socket;
+
+      // Ask other clients to setup peer connection receiver
+      for (let id in streamPeers) {
+        if (id !== socket.id) {
+          console.log("Sending init receive to: ", id);
+          streamPeers[id].emit("initReceive", socket.id);
+        }
+      }
+      break;
+
+    // Relay peer connection signal to a specific socket
+    case "signal":
+      console.log(`Sending signal from ${socket.id} to ${data}`);
+      if (streamPeers[data.socket_id]) {
+        streamPeers[data.socket_id].emit("signal", {
+          socket_id: socket.id,
+          signal: data.signal,
+        });
+      }
+      break;
+
+    case "initSend":
+      console.log(`initSend by ${socket.id} for ${data.init_socket_id}`);
+
+      streamPeers[data.init_socket_id].emit("initSend", socket.id);
+      break;
+
+    // case "disconnect":
+    //   console.log("socket disconnected: ", socket.id);
+
+    //   // TODO: Replace with rooms
+    //   socket.broadcast.emit("removePeer", socket.id);
+    //   delete streamPeers[socket.id];
+    default:
+      console.log("Unhandled action and data: ", action, data);
+      break;
+  }
 }
 
 // Handles all game related events.
