@@ -16,8 +16,6 @@ const authApiRoute = require("./src/apiRoutes/auth");
 const gameApiRoute = require("./src/apiRoutes/game");
 const authenticate = require("./src/middleware/authenticate");
 
-const { createGame } = require("./src/controllers/GameController");
-
 // Database connection using Heroku or localhost
 let mongoDBUrl =
   process.env.MONGODB_URI || "mongodb://localhost:27017/connect4";
@@ -37,7 +35,7 @@ db.on("error", (err) => {
 
 db.once("open", async () => {
   console.log("Connected to database.");
-
+  
   // Set mongoose debugging information to show in console
   mongoose.set("debug", true);
 });

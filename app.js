@@ -1,5 +1,5 @@
 let server = require("./server");
-let PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 9000;
 
 // Run the server
 let app = server.app;

@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 chai.use(chaiHttp);
 
 // TODO: Switch to using mongo-memory-server
-suite("Integration Tests", function () {
+suite.skip("Integration Tests", function () {
   suiteSetup(() => {
     // Minimise debugging information in tests
     mongoose.set("debug", false);
