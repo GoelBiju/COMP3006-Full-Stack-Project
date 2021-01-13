@@ -57,6 +57,7 @@ app.use(cookieParser());
 
 // Configure to use statics
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "node_modules")));
 
 // Use ejs
 app.set("view engine", "ejs");
