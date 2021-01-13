@@ -9,8 +9,10 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "run-test": "nyc --reporter=html --reporter=text mocha -ui tdd test/unit --recursive --timeout 10000",
-    "test": "start-server-and-test start http://localhost:9000 run-test",
+    "test:unit": "nyc --reporter=html --reporter=text mocha -ui tdd test/unit --recursive",
+    "test:e2e": "mocha -ui tdd test/e2e/ --recursive --timeout 10000",
+    "e2e-start": "start-server-and-test start http://localhost:9000 test:e2e",
+    "test": "test:unit",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
