@@ -13,7 +13,7 @@ suite.skip("Integration Tests", function () {
     mongoose.set("debug", false);
   });
 
-  test("Test GET /", function () {
+  test.skip("Test GET /", function () {
     let app = server.app;
 
     chai
@@ -24,6 +24,16 @@ suite.skip("Integration Tests", function () {
         // chai.assert.equal(response.text, "Connect Four", "Wrong response text");
       });
   });
+
+  test.skip("Test GET /login");
+
+  test.skip("Test GET /register");
+
+  test.skip("Test POST /api/login");
+
+  test.skip("Test POST /api/register");
+
+  test.skip("Test GET /game/:gameId");
 
   // TODO: This is causing issues with TravisCI
   //       by exceeding the timeout limit (possibly to do with done()/promises).
