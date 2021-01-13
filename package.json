@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "run-test": "nyc --reporter=html --reporter=text mocha -ui tdd test/e2e/ --recursive --timeout 10000",
+    "run-test": "nyc --reporter=html --reporter=text mocha -ui tdd test/unit --recursive --timeout 10000",
     "test": "start-server-and-test start http://localhost:9000 run-test",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
