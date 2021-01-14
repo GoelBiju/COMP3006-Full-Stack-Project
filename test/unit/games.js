@@ -115,10 +115,13 @@ suite("Game - Controller/Model", () => {
     chai.expect(cntNone).to.eq(0);
 
     // Add some players to the game
-    await Game.findById(gameId, async (err, game) => {
-      game.players = ["player 1", "player 2"];
-      await game.save();
-    });
+    // await Game.findById(gameId, async (err, game) => {
+    //   game.players = ["player 1", "player 2"];
+    //   await game.save();
+    // });
+    let game = await Game.findById(gameId).exec();
+    game.players = ["player 1", "player 2"];
+    await game.save();
 
     // Check count after adding two players
     let cntTwo = await getGamePlayerCount(gameId);
@@ -127,10 +130,13 @@ suite("Game - Controller/Model", () => {
 
   test("gets a random player from a game", async () => {
     // Add some players to the game
-    await Game.findById(gameId, async (err, game) => {
-      game.players = ["player 1", "player 2"];
-      await game.save();
-    });
+    // await Game.findById(gameId, async (err, game) => {
+    //   game.players = ["player 1", "player 2"];
+    //   await game.save();
+    // });
+    let game = await Game.findById(gameId).exec();
+    game.players = ["player 1", "player 2"];
+    await game.save();
 
     let counter = 0;
     for (let i = 0; i < 100; i++) {
@@ -148,10 +154,13 @@ suite("Game - Controller/Model", () => {
 
   test("gets game player username by ID and index", async () => {
     // Add some players to the game
-    await Game.findById(gameId, async (err, game) => {
-      game.players = ["test"];
-      await game.save();
-    });
+    // await Game.findById(gameId, async (err, game) => {
+    //   game.players = ["test"];
+    //   await game.save();
+    // });
+    let game = await Game.findById(gameId).exec();
+    game.players = ["test"];
+    await game.save();
 
     const player = await getGamePlayer(gameId, 0);
     chai.expect(player).to.eq("test");
