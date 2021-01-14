@@ -1,14 +1,22 @@
 let chai = require("chai");
+const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
+
 const {
+  makeMove,
+  performChecks,
   coinMatchCheck,
   horizontalCheck,
   verticalCheck,
   diagonalChecks,
-  drawCheck,
   isBoardFull,
 } = require("../../src/logic");
+const Game = require("../../src/models/Game");
+
+let mongoServer;
 
 suite("Logic", () => {
+  let gameId;
   let board;
   let fullBoard = [
     [1, 1, 1, 1, 1, 1, 1],
@@ -18,6 +26,26 @@ suite("Logic", () => {
     [0, 1, 0, 1, 0, 1, 1],
     [1, 0, 1, 0, 1, 0, 1],
   ];
+
+  suiteSetup(async () => {
+    // Create Mongo memory server
+    mongoServer = new MongoMemoryServer();
+    const mongoUri = await mongoServer.getUri();
+    await mongoose
+      .connect(mongoUri, {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+      })
+      .then(() => {
+        // Disable any debugging information from showing.
+        mongoose.set("debug", false);
+      });
+
+    // Create an default game
+    const game = new Game();
+    await game.save();
+    gameId = game._id;
+  });
 
   setup(() => {
     board = [
@@ -30,7 +58,14 @@ suite("Logic", () => {
     ];
   });
 
+  suiteTeardown(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
+
   test.skip("it can make a move on the board");
+
+  test("it can perform checks on a given game", async () => {});
 
   test("coin match check", () => {
     let result;

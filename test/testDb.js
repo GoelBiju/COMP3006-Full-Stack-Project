@@ -9,7 +9,7 @@ const connectTestDb = async () => {
   const mongoUri = await mongoServer.getUri();
 
   // Disconnect any active connections
-  await mongoose.disconnect();
+  // await mongoose.disconnect();
 
   // connect to test database
   await mongoose
