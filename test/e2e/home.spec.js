@@ -33,6 +33,7 @@ suite("e2e - home", function () {
 
   setup(async function () {
     page = await browser.newPage();
+    page.setDefaultNavigationTimeout(0);
   });
 
   teardown(async function () {
