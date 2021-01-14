@@ -30,12 +30,13 @@ mongoose.connect(mongoDBUrl, {
 const db = mongoose.connection;
 
 db.on("error", (err) => {
+  console.log("A connection error occurred in server.js");
   console.log(err);
 });
 
 db.once("open", async () => {
   console.log("Connected to database.");
-  
+
   // Set mongoose debugging information to show in console
   mongoose.set("debug", true);
 });
