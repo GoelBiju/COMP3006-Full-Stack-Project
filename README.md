@@ -1,5 +1,7 @@
 # COMP3006 Full-Stack Project
 
+Ensure you have [MongoDB](http://www.mongodb.org/downloads) and [Node.js](http://nodejs.org/) installed before setting this application up.
+
 Run NPM install first
 
 ```bash
