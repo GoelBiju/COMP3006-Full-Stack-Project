@@ -145,6 +145,7 @@ const switchMove = async (gameId, currentPlayer) => {
   return nextPlayer;
 };
 
+// Get the state of a game
 const getGameState = async (gameId) => {
   let state;
 

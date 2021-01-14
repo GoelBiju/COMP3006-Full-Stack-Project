@@ -1,5 +1,19 @@
 # COMP3006 Full-Stack Project
 
+Run NPM install first
+
+```bash
+npm install
+```
+
+Start the local development environment
+
+```bash
+npm run dev
+```
+
+The environment will be available at http://localhost:9000/.
+
 COMP3006 Full Stack Project based on a multiplayer Connect 4 game.
 
 Connect4 Heroku: https://comp3006-connect-four.herokuapp.com/

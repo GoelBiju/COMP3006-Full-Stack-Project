@@ -19,12 +19,12 @@ suite("Logic", () => {
   let gameId;
   let board;
   let fullBoard = [
-    [1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 1, 1, 1, 1, 1],
-    [0, 1, 0, 1, 0, 1, 1],
-    [1, 0, 1, 0, 1, 0, 1],
+    [1, 1, 1, 0, 1, 1, 1],
+    [1, 1, 0, 1, 0, 0, 1],
+    [0, 1, 0, 0, 1, 0, 0],
+    [1, 0, 0, 1, 1, 0, 1],
+    [0, 1, 1, 1, 0, 1, 1],
+    [1, 0, 1, 1, 1, 0, 1],
   ];
 
   suiteSetup(async () => {
@@ -63,9 +63,116 @@ suite("Logic", () => {
     await mongoServer.stop();
   });
 
-  test.skip("it can make a move on the board");
+  test("it can make a move on the board", async () => {
+    let game;
+    let row;
 
-  test("it can perform checks on a given game", async () => {});
+    // Update next move to point to player 0
+    game = await Game.findById(gameId).exec();
+    game.nextMove = 0;
+    game.state = 0;
+    await game.save();
+
+    // No previous data, expect move to return bottom (5th row).
+    row = await makeMove(gameId, 0, 1);
+    chai.assert.equal(row, 5, "The row is not equal to 5");
+
+    game = await Game.findById(gameId).exec();
+    game.nextMove = 1;
+    game.state = 0;
+    await game.save();
+
+    // No previous data, expect move to return bottom (5th row).
+    row = await makeMove(gameId, 1, 1);
+    chai.assert.equal(row, 4, "The row is not equal to 4");
+  });
+
+  test("it can perform checks on a given game to find horizontal win", async () => {
+    // Perform checks to continue playing
+    let checkResult;
+    checkResult = await performChecks(gameId);
+    chai.assert.equal(
+      checkResult,
+      0,
+      "The check result is not equal to 0 (horizontal win)"
+    );
+
+    // Set board to win horizontally
+    board[5][0] = 1;
+    board[5][1] = 1;
+    board[5][2] = 1;
+    board[5][3] = 1;
+
+    game = await Game.findById(gameId).exec();
+    game.board = board;
+    game.markModified("board");
+    await game.save();
+
+    // Perform checks for win
+    checkResult = await performChecks(gameId);
+    chai.assert.equal(
+      checkResult,
+      1,
+      "The check result is not equal to 1 (horizontal win)"
+    );
+  });
+
+  test("it can perform checks on a given game to find vertical win", async () => {
+    // Set board to win vertically
+    board[5][0] = 0;
+    board[4][0] = 0;
+    board[3][0] = 0;
+    board[2][0] = 0;
+
+    game = await Game.findById(gameId).exec();
+    game.board = board;
+    game.markModified("board");
+    await game.save();
+
+    // Perform checks for win
+    const checkResult = await performChecks(gameId);
+    chai.assert.equal(
+      checkResult,
+      2,
+      "The check result is not equal to 2 (vertical win)"
+    );
+  });
+
+  test("it can perform checks on a given game to find diagonal win", async () => {
+    // Set board to win diagonally
+    board[5][0] = 1;
+    board[4][1] = 1;
+    board[3][2] = 1;
+    board[2][3] = 1;
+
+    game = await Game.findById(gameId).exec();
+    game.board = board;
+    game.markModified("board");
+    await game.save();
+
+    // Perform checks for win
+    const checkResult = await performChecks(gameId);
+    chai.assert.equal(
+      checkResult,
+      3,
+      "The check result is not equal to 3 (diagonal win)"
+    );
+  });
+
+  test("it can perform checks on a given game to find a full board", async () => {
+    game = await Game.findById(gameId).exec();
+    game.board = fullBoard;
+    game.markModified("board");
+    await game.save();
+
+    // Perform checks for a full board
+    const checkResult = await performChecks(gameId);
+    chai.assert.equal(
+      checkResult,
+      4,
+      "The check result is not equal to 4 (full board)"
+    );
+  });
 
   test("coin match check", () => {
     let result;
@@ -149,8 +256,14 @@ suite("Logic", () => {
     chai.expect(result).to.eq(true);
   });
 
-  test("check full board", () => {
-    let result = isBoardFull(fullBoard);
-    chai.expect(result).to.eq(true);
+  test("check if the game board is full", () => {
+    let full;
+    full = isBoardFull(fullBoard);
+    chai.expect(full).to.eq(true);
+
+    // Change to be not full
+    fullBoard[0][0] = -1;
+    full = isBoardFull(fullBoard);
+    chai.expect(full).to.eq(false);
   });
 });
