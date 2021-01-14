@@ -7,7 +7,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/game.css" />
 
-    <style>
+    <!-- <style>
       .containers {
         display: grid;
         grid-gap: 5px;
@@ -15,9 +15,9 @@
         grid-template-rows: repeat(auto-fit, 300px);
       }
 
-      .container {
+      /* .container {
         display: flex;
-      }
+      } */
 
       .vid {
         flex: 0 1 auto;
@@ -36,7 +36,7 @@
         margin: 2px 2px;
         cursor: pointer;
       }
-    </style>
+    </style> -->
 
     <!-- socket.io -->
     <script src="/socket.io/socket.io.js" defer></script>
@@ -61,13 +61,21 @@
       <div class="container-fluid">
         <p class="h2">
           <a class="navbar-brand" href="/">
-            <img src="/img/connect4.png" alt="Home" width="50" height="50" class="d-inline-block align-top" />
+            <img
+              src="/img/connect4.png"
+              alt="Home"
+              width="50"
+              height="50"
+              class="d-inline-block align-top"
+            />
             Connect4 - Play
-          </a>      
+          </a>
           <small class="text-muted">(<%= gameId %>)</small>
-          <button id="copyLinkBtn" class="btn btn-primary" type="button">Copy Link</button>
+          <button id="copyLinkBtn" class="btn btn-primary" type="button">
+            Copy Link
+          </button>
         </p>
-       
+
         <!-- <button id="disconnect-btn" class="btn btn-danger" type="button">
           Disconnect
         </button> -->
@@ -104,7 +112,13 @@
           </div>
         </div>
         <div class="modal-footer">
-          <a id="gameModalBtn" type="button" role="button" class="btn btn-primary">OK</a>
+          <a
+            id="gameModalBtn"
+            type="button"
+            role="button"
+            class="btn btn-primary"
+            >OK</a
+          >
         </div>
       </div>
     </div>
@@ -124,15 +138,22 @@
         </div>
       </div>
     </div>
-   
+
     <div class="container">
       <div class="d-flex flex-row gap-5">
         <div>
           <div class="card" style="width: 18rem">
-            <div id="userMedia" class="container">
+            <img
+              src="/img/user.jpeg"
+              width="100px"
+              height="250px"
+              alt="user-image"
+              class="card-img-top"
+            />
+
+            <!-- <div id="userMedia" class="container">
               <video hidden id="localVideo" class="vid" autoplay muted></video>
-              <img src="/img/user.jpeg" width="100px" height="250px" alt="user-image" class="card-img-top" />
-            </div>
+            </div> -->
 
             <!-- show video controls -->
             <!-- <div style="text-align: center;">
@@ -146,9 +167,8 @@
 
             <div class="card-body">
               <h5 class="card-title"><%= username %></h5>
-              <p class="card-text">      
-                <strong>Remaining coins: </strong><p id="my-remaining-coins">21</p>
-              </p>
+              <strong>Remaining coins: </strong>
+              <p id="my-remaining-coins">21</p>
             </div>
           </div>
         </div>
@@ -223,13 +243,20 @@
 
         <div>
           <div class="card" style="width: 18rem">
-            <div id="opponentMedia" class="container">
-              <img src="/img/user.jpeg" width="100px" height="250px" alt="opponent-image" class="card-img-top" />
-            </div>
+            <!-- <div id="opponentMedia" class="container">
+            </div> -->
+            <img
+              src="/img/user.jpeg"
+              width="100px"
+              height="250px"
+              alt="opponent-image"
+              class="card-img-top"
+            />
 
             <div class="card-body">
               <h5 id="opponent-name" class="card-title">No opponent</h5>
-              <strong>Remaining coins: </strong><p id="opponent-remaining-coins">21</p>
+              <strong>Remaining coins: </strong>
+              <p id="opponent-remaining-coins">21</p>
             </div>
           </div>
         </div>

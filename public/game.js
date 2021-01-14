@@ -63,10 +63,10 @@ $(function () {
 
     // Set the player names
     $("#modalPlayers").css("text-align", "center");
-    $("#modalPlayerOne").text("goel");
+    $("#modalPlayerOne").text(gamePlayers[0]);
     $("#modalPlayerOne").css("font-size", "20px");
     $("#modalPlayerOne").css("color", "grey");
-    $("#modalPlayerTwo").text("tom");
+    $("#modalPlayerTwo").text(gamePlayers[1]);
     $("#modalPlayerTwo").css("font-size", "20px");
     $("#modalPlayerTwo").css("color", "grey");
 
