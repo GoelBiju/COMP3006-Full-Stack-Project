@@ -33,6 +33,7 @@ suite("e2e - home", function () {
 
   setup(async function () {
     page = await browser.newPage();
+    page.setDefaultNavigationTimeout(0);
   });
 
   teardown(async function () {
@@ -50,6 +51,9 @@ suite("e2e - home", function () {
       page.click("#createGameBtn"),
       page.waitForNavigation({ waitUntil: "networkidle0" }),
     ]);
+
+    await page.goto(baseUrl + "/");
+    await page.click("#logout-btn");
   });
 
   test.skip("it should join a created game", async function () {
@@ -62,9 +66,11 @@ suite("e2e - home", function () {
       page.waitForNavigation({ waitUntil: "networkidle0" }),
     ]);
 
+    console.log(page.url());
+    console.log(await page.content());
     await Promise.all([
-      page.click("#play-btn-1"),
-      page.waitForNavigation({ waitUntil: "networkidle0" }),
+      page.$eval("a#play-btn-1", (el) => el.click()),
+      page.waitForNavigation(),
     ]);
   });
 });

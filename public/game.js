@@ -63,10 +63,10 @@ $(function () {
 
     // Set the player names
     $("#modalPlayers").css("text-align", "center");
-    $("#modalPlayerOne").text("goel");
+    $("#modalPlayerOne").text(gamePlayers[0]);
     $("#modalPlayerOne").css("font-size", "20px");
     $("#modalPlayerOne").css("color", "grey");
-    $("#modalPlayerTwo").text("tom");
+    $("#modalPlayerTwo").text(gamePlayers[1]);
     $("#modalPlayerTwo").css("font-size", "20px");
     $("#modalPlayerTwo").css("color", "grey");
 
@@ -231,9 +231,9 @@ $(function () {
           gameInfo.scores[myId],
           gamePlayers.findIndex((u) => u != username)
         );
-        $("#my-remaining-coins").text(42 - gameInfo.scores[myId]);
+        $("#my-remaining-coins").text(21 - gameInfo.scores[myId]);
         $("#opponent-remaining-coins").text(
-          42 - gameInfo.scores[gamePlayers.findIndex((u) => u != username)]
+          21 - gameInfo.scores[gamePlayers.findIndex((u) => u != username)]
         );
       }
 
@@ -276,9 +276,9 @@ $(function () {
       );
 
       // Update player scores
-      $("#my-remaining-coins").text(42 - playerScores[myId]);
+      $("#my-remaining-coins").text(21 - playerScores[myId]);
       $("#opponent-remaining-coins").text(
-        42 - playerScores[gamePlayers.findIndex((u) => u != username)]
+        21 - playerScores[gamePlayers.findIndex((u) => u != username)]
       );
 
       // Check if we received a win, lost or draw result.
