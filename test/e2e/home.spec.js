@@ -50,9 +50,16 @@ suite("e2e - home", function () {
       page.click("#createGameBtn"),
       page.waitForNavigation({ waitUntil: "networkidle0" }),
     ]);
+
+    await page.goto(baseUrl + "/");
+
+    await Promise.all([
+      page.click("#logout-btn"),
+      page.waitForNavigation({ waitUntil: "networkidle0" }),
+    ]);
   });
 
-  test.skip("it should join a created game", async function () {
+  test("it should join a created game", async function () {
     await page.goto(baseUrl + "/login");
     await page.type("#username", "test2");
     await page.type("#password", "test2");
@@ -61,6 +68,8 @@ suite("e2e - home", function () {
       page.click("#login-btn"),
       page.waitForNavigation({ waitUntil: "networkidle0" }),
     ]);
+
+    console.log(page.url());
 
     await Promise.all([
       page.click("#play-btn-1"),
