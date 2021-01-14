@@ -13,6 +13,12 @@ const {
   updateNextMove,
   switchMove,
   getGamePlayers,
+  getGameState,
+  updateState,
+  updateWinner,
+  getPlayerScores,
+  getGameInfo,
+  gamePlayerExists,
 } = require("../../src/controllers/GameController");
 
 let mongoServer;
@@ -51,13 +57,13 @@ suite("Game - Controller/Model", () => {
       ],
       players: [],
       nextMove: -1,
+      scoreOne: 0,
+      scoreTwo: 0,
     };
   });
 
   setup(async () => {
     // Create an default game
-    // const g = await Game.create({ _id: "1" });
-    // await g.save();
     const game = new Game();
     await game.save();
     gameId = game._id;
@@ -153,10 +159,13 @@ suite("Game - Controller/Model", () => {
 
   test("get all game players", async () => {
     // Add some players to the game
-    await Game.findById(gameId, async (err, game) => {
-      game.players = ["test 1", "test 2"];
-      await game.save();
-    });
+    // await Game.findById(gameId, async (err, game) => {
+    //   game.players = ["test 1", "test 2"];
+    //   await game.save();
+    // });
+    let game = await Game.findById(gameId).exec();
+    game.players = ["test 1", "test 2"];
+    await game.save();
 
     // Get all the players
     const players = await getGamePlayers(gameId);
@@ -199,9 +208,76 @@ suite("Game - Controller/Model", () => {
     chai.assert.equal(nextPlayer, 0, "Next move not updated to 0");
   });
 
-  test.skip("it updates the state of a game");
+  test("it gets the state of a game", async () => {
+    // Set state to 1
+    let game;
+    game = await Game.findById(gameId).exec();
+    game.state = 1;
+    await game.save();
 
-  test.skip("it updates the winner of a game");
+    const state = await getGameState(gameId);
+    chai.assert.equal(state, 1, "Game state is not equal to 1");
+  });
 
-  test.skip("it gets the players scores from a game");
+  test("it updates the state of a game", async () => {
+    const updated = await updateState(gameId, 2);
+    chai.assert.equal(updated, true, "State has not been updated");
+
+    // Check updated state
+    let game = await Game.findById(gameId).exec();
+    chai.assert.equal(game.state, 2, "Game state has not been updated to 2");
+  });
+
+  test("it updates the winner of a game", async () => {
+    const updated = await updateWinner(gameId, "new player 1");
+    chai.assert.equal(updated, true, "Winner has not been updated");
+
+    // Check updated state
+    let game = await Game.findById(gameId).exec();
+    chai.assert.equal(
+      game.winner,
+      "new player 1",
+      "Game winner has not been updated to new player 1"
+    );
+  });
+
+  test("it gets the players scores from a game", async () => {
+    let scores;
+
+    // Check updated state
+    scores = await getPlayerScores(gameId);
+    chai.expect(scores).to.eql([0, 0]);
+
+    // Change the scores to [1, 2] and check
+    let game = await Game.findById(gameId).exec();
+    game.scoreOne = 1;
+    game.scoreTwo = 2;
+    await game.save();
+
+    // Check updated state
+    scores = await getPlayerScores(gameId);
+    chai.expect(scores).to.eql([1, 2]);
+  });
+
+  test("it gets the game information given a game id", async () => {
+    const gameInfo = await getGameInfo(gameId);
+    chai.expect(gameInfo).to.not.equal(null);
+
+    // Expect the default values
+    chai.expect(gameInfo.board).eql(gameData.board);
+    chai.expect(gameInfo.nextMove).eql(gameData.nextMove);
+    chai.expect(gameInfo.scores).eql([gameData.scoreOne, gameData.scoreTwo]);
+    chai.expect(gameInfo.gamePlayers).eql([]);
+  });
+
+  test("it checks if a player is already present in the game", async () => {
+    // Add some game players
+    let game = await Game.findById(gameId).exec();
+    game.players = ["test user 1", "test user 2"];
+    await game.save();
+
+    // Check if the player exists
+    const exists = await gamePlayerExists(gameId, "test user 2");
+    chai.expect(exists).equal(true);
+  });
 });

@@ -20,46 +20,46 @@ const create = (req, res, next) => {
     });
 };
 
-const getGame = (req, res, next) => {
-  const { gameId } = req.params;
+// const getGame = (req, res, next) => {
+//   const { gameId } = req.params;
 
-  Game.findById(gameId)
-    .then((game) => {
-      res.json({
-        game,
-      });
-    })
-    .catch((err) => {
-      res.json({
-        message: `An error occurred: ${err}`,
-      });
-    });
-};
+//   Game.findById(gameId)
+//     .then((game) => {
+//       res.json({
+//         game,
+//       });
+//     })
+//     .catch((err) => {
+//       res.json({
+//         message: `An error occurred: ${err}`,
+//       });
+//     });
+// };
 
-const getUserGames = (req, res, next) => {
-  const { username } = req.query;
+// const getUserGames = (req, res, next) => {
+//   const { username } = req.query;
 
-  if (username) {
-    Game.find({ players: username })
-      .then((games) => {
-        res.json({
-          games: games.map((g) => [g._id, g.state]),
-        });
-      })
-      .catch((err) => {
-        res.json({
-          message: `An error occurred: ${err}`,
-        });
-      });
-  } else {
-    res.json({
-      message: "No query parameters",
-    });
-  }
-};
+//   if (username) {
+//     Game.find({ players: username })
+//       .then((games) => {
+//         res.json({
+//           games: games.map((g) => [g._id, g.state]),
+//         });
+//       })
+//       .catch((err) => {
+//         res.json({
+//           message: `An error occurred: ${err}`,
+//         });
+//       });
+//   } else {
+//     res.json({
+//       message: "No query parameters",
+//     });
+//   }
+// };
 
 module.exports = {
   create,
-  getGame,
-  getUserGames,
+  // getGame,
+  // getUserGames,
 };
