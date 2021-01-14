@@ -1,7 +1,7 @@
 const puppeteer = require("puppeteer");
 
 suite("e2e - home", function () {
-  let baseUrl = `https://comp3006-connect-four.herokuapp.com`;
+  let baseUrl = `http://localhost:9000`;
   let browser;
   let page;
 
