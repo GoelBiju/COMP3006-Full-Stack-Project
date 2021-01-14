@@ -4,6 +4,8 @@ COMP3006 Full Stack Project based on a multiplayer Connect 4 game.
 
 ## Instructions
 
+Ensure you have [MongoDB](http://www.mongodb.org/downloads) and [Node.js](http://nodejs.org/) installed before setting this application up.
+
 Run `npm` install first:
 
 ```bash
