@@ -112,6 +112,23 @@ suite("Integration Tests", function (done) {
     });
   });
 
+  test("Test GET /api/game", function (done) {
+    let app = server.app;
+
+    chai
+      .request(app)
+      .get("/api/game")
+      .end(function (error, response) {
+        chai.assert.equal(response.status, 200, "Wrong status code");
+        chai.assert.exists(
+          response.body.redirectUrl,
+          "No redirectUrl exists when creating a game"
+        );
+        console.log("game response body:", response.body);
+        done();
+      });
+  });
+
   suiteTeardown(async () => {
     await mongoose.disconnect();
   });
