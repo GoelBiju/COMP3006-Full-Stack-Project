@@ -1,4 +1,22 @@
+function sound(src) {
+  this.sound = document.createElement("audio");
+  this.sound.src = src;
+  this.sound.setAttribute("preload", "auto");
+  this.sound.setAttribute("controls", "none");
+  this.sound.style.display = "none";
+  document.body.appendChild(this.sound);
+  this.play = function () {
+    this.sound.play();
+  };
+  this.stop = function () {
+    this.sound.pause();
+  };
+}
+
 $(function () {
+  // Create winning sound
+  const winningSound = new sound("/audio/winning.mp3");
+
   // Get gameId
   console.log("Game ID: ", gameId);
 
@@ -93,8 +111,8 @@ $(function () {
   });
 
   function createConfetti(i) {
-    var width = Math.random() * 8;
-    var height = width * 0.4;
+    var width = Math.random() * 10;
+    var height = width * 0.7;
     var colourIdx = Math.ceil(Math.random() * 3);
     var colour = "red";
 
@@ -290,6 +308,9 @@ $(function () {
           for (let i = 0; i < 150; i++) {
             createConfetti(i);
           }
+
+          // Play winning sound
+          winningSound.play();
         }, 1000);
 
         showResultModal(playerScores[0], playerScores[1], "You Win", "green");
