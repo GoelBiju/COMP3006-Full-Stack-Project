@@ -28,10 +28,17 @@ const register = (req, res, next) => {
           });
         })
         .catch((error) => {
-          res.json({
-            registered: false,
-            message: `An error occured: ${error}`,
-          });
+          if (error.name === "MongoError" && error.code === 11000) {
+            res.json({
+              registered: false,
+              message: `A user with the username "${req.body.username}" already exists. Please select another username.`,
+            });
+          } else {
+            res.json({
+              registered: false,
+              message: `An error occured: ${error}`,
+            });
+          }
         });
     }
   });
